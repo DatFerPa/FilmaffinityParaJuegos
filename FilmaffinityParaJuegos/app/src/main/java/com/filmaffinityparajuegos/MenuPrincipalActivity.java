@@ -1,5 +1,6 @@
 package com.filmaffinityparajuegos;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +26,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
 
     }
     private void generateBotones() {
+
         for(int i = 0; i <10; i++){
             ImageButton buttonI;
             buttonI = new ImageButton(getApplicationContext());
@@ -35,6 +37,9 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                     //Aqui hay que hacer la llama para cada uno de los juegos
                     //mas adelante tendremos que crear una clase juegoViewButton para meterlo aqui y que tenga la info del juego
                     Toast.makeText(getApplicationContext(), "Ha clicado en un juego", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
+                    startActivity(intent);
+
                 }
             });
             layout.addView(buttonI);
