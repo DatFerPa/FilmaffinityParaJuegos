@@ -2,8 +2,10 @@ package com.filmaffinityparajuegos;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,14 @@ public class MenuPrincipalActivity extends AppCompatActivity {
             ImageButton buttonI;
             buttonI = new ImageButton(getApplicationContext());
             buttonI.setImageResource((i%2 ==0)?R.drawable.godofwarmini :R.drawable.legendofkaymini);
+            buttonI.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Aqui hay que hacer la llama para cada uno de los juegos
+                    //mas adelante tendremos que crear una clase juegoViewButton para meterlo aqui y que tenga la info del juego
+                    Toast.makeText(getApplicationContext(), "Ha clicado en un juego", Toast.LENGTH_SHORT).show();
+                }
+            });
             layout.addView(buttonI);
         }
     }
