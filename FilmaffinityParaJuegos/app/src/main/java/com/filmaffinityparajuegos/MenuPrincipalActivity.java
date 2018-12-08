@@ -50,17 +50,18 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                         if(obj.opt("summary") != null)
                             juego.setDescripcion(obj.getString("summary"));
                         else
-                            juego.setDescripcion("no tiene descripcion");
+                            juego.setDescripcion("No tiene descripcion");
                         juego.setTitulo(obj.getString("name"));
                         // juego.setId_developer(obj.getString(""));
-                        juego.setUri_imagen(obj.getJSONObject("cover").getString("url"));
+                        juego.setUri_imagen("https:" + obj.getJSONObject("cover").getString("url"));
+                        System.out.println(juego.descripcion);
                         videojuegosNuevos.add(juego);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    System.out.println(videojuegosNuevos);
-                }
 
+                }
+                generateBotones();
             }
 
             @Override
@@ -68,7 +69,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
 
             }
         });
-        generateBotones();
+
     }
 
     private void generateBotones() {
