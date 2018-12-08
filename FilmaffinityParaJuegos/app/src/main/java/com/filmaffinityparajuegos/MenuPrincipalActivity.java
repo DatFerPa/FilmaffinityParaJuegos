@@ -27,15 +27,19 @@ public class MenuPrincipalActivity extends AppCompatActivity {
 
     ArrayList<ImageButton> botones = new ArrayList<ImageButton>();
     LinearLayout layout;
+<<<<<<< Updated upstream
     ArrayList<Videojuego> videojuegosNuevos = new ArrayList<>();
     ArrayList<Videojuego> videojuegosPopulares = new ArrayList<>();
 
+=======
+>>>>>>> Stashed changes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
         layout = findViewById(R.id.LayoutMain);
         IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext() , "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD,false);
+<<<<<<< Updated upstream
         Parameters params = new Parameters().addFields("*").addFilter("[category][eq]=0").addOrder("published_at:desc").addLimit("6");
         wrapper.games(params, new OnSuccessCallback() {
             @Override
@@ -65,8 +69,11 @@ public class MenuPrincipalActivity extends AppCompatActivity {
 
             }
         });
+=======
+>>>>>>> Stashed changes
         generateBotones();
     }
+
     private void generateBotones() {
 
         for(int i = 0; i <videojuegosNuevos.size(); i++){
