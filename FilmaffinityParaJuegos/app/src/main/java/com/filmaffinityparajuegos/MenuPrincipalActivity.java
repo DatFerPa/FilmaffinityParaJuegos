@@ -8,6 +8,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.igdb.api_android_java.wrapper.IGDBWrapper;
+import com.igdb.api_android_java.wrapper.Version;
+
 import java.util.ArrayList;
 
 public class MenuPrincipalActivity extends AppCompatActivity {
@@ -20,7 +23,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
         layout = findViewById(R.id.LayoutMain);
-
+        IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext() , "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD,false);
         generateBotones();
 
 
