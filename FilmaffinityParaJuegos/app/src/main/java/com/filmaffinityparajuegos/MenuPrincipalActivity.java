@@ -40,22 +40,25 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         wrapper.games(params, new OnSuccessCallback() {
             @Override
             public void onSuccess(@NotNull JSONArray jsonArray) {
-                System.out.println(jsonArray.toString());
 
-                for(int i = 0; i < jsonArray.length();i++){
+                for (int i = 0; i < jsonArray.length(); i++) {
                     try {
                         JSONObject obj = jsonArray.getJSONObject(i);
+                        System.out.println(obj);
                         Videojuego juego = new Videojuego();
                         juego.setId_juego(obj.getString("id"));
-                        juego.setDescripcion(obj.getString("summary"));
+                        if(obj.opt("summary") != null)
+                            juego.setDescripcion(obj.getString("summary"));
+                        else
+                            juego.setDescripcion("no tiene descripcion");
                         juego.setTitulo(obj.getString("name"));
-                       // juego.setId_developer(obj.getString(""));
+                        // juego.setId_developer(obj.getString(""));
                         juego.setUri_imagen(obj.getJSONObject("cover").getString("url"));
                         videojuegosNuevos.add(juego);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
+                    System.out.println(videojuegosNuevos);
                 }
 
             }
