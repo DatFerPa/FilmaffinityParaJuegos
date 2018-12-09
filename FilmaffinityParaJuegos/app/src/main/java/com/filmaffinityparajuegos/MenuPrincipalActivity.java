@@ -48,14 +48,12 @@ public class MenuPrincipalActivity extends AppCompatActivity {
     }
 
 
+    private void generateBotonesNuevos() {
 
-
-    private void generateBotones() {
-
-        for(int i = 0; i <videojuegosNuevos.size(); i++){
+        for (int i = 0; i < videojuegosNuevos.size(); i++) {
             ImageButton buttonI;
             buttonI = new ImageButton(getApplicationContext());
-            Picasso.get().load(Uri.parse(videojuegosNuevos.get(i).getUri_imagen())).resize(500  ,500).into(buttonI);
+            Picasso.get().load(Uri.parse(videojuegosNuevos.get(i).getUri_imagen())).resize(500, 500).into(buttonI);
             buttonI.setId(i);
             buttonI.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -66,17 +64,23 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
                     ImageButton btn = (ImageButton) findViewById(view.getId());
 
-                    intent.putExtra(NV,   videojuegosNuevos.get(btn.getId()));
+                    intent.putExtra(NV, videojuegosNuevos.get(btn.getId()));
                     startActivity(intent);
                 }
             });
             layout.addView(buttonI);
         }
+    }
 
-        for(int i = 0; i <videojuegosPopulares.size(); i++){
+    private void GenerateBotonesPopulares() {
+
+        for (
+                int i = 0; i < videojuegosPopulares.size(); i++)
+
+        {
             ImageButton buttonI;
             buttonI = new ImageButton(getApplicationContext());
-            Picasso.get().load(Uri.parse(videojuegosPopulares.get(i).getUri_imagen())).resize(500  ,500).into(buttonI);
+            Picasso.get().load(Uri.parse(videojuegosPopulares.get(i).getUri_imagen())).resize(500, 500).into(buttonI);
             buttonI.setId(i);
             buttonI.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -87,18 +91,18 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
                     ImageButton btn = (ImageButton) findViewById(view.getId());
 
-                    intent.putExtra(NV,   videojuegosPopulares.get(btn.getId()));
+                    intent.putExtra(NV, videojuegosPopulares.get(btn.getId()));
                     startActivity(intent);
                 }
             });
             layouPopu.addView(buttonI);
         }
+
     }
 
 
-
-    private void obtenerJuegosActuales(){
-        IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext() , "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD,false);
+    private void obtenerJuegosActuales() {
+        IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(), "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
         Parameters params = new Parameters().addFields("*").addFilter("[category][eq]=0").addOrder("published_at:desc").addLimit("6");
         wrapper.games(params, new OnSuccessCallback() {
             @Override
@@ -110,7 +114,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                         System.out.println(obj);
                         Videojuego juego = new Videojuego();
                         juego.setId_juego(obj.getString("id"));
-                        if(obj.opt("summary") != null)
+                        if (obj.opt("summary") != null)
                             juego.setDescripcion(obj.getString("summary"));
                         else
                             juego.setDescripcion("No tiene descripcion");
@@ -122,9 +126,8 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                 }
-                generateBotones();
+                generateBotonesNuevos();
             }
 
             @Override
@@ -137,7 +140,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
 
     private void obtenerJuegosPopulares() {
 
-        IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext() , "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD,false);
+        IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(), "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
         Parameters params = new Parameters().addFields("*").addFilter("[category][eq]=0").addOrder("popularity:desc").addLimit("6");
         wrapper.games(params, new OnSuccessCallback() {
             @Override
@@ -149,7 +152,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                         System.out.println(obj);
                         Videojuego juego = new Videojuego();
                         juego.setId_juego(obj.getString("id"));
-                        if(obj.opt("summary") != null)
+                        if (obj.opt("summary") != null)
                             juego.setDescripcion(obj.getString("summary"));
                         else
                             juego.setDescripcion("No tiene descripcion");
@@ -161,9 +164,8 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                 }
-                generateBotones();
+                GenerateBotonesPopulares();
             }
 
             @Override
@@ -171,10 +173,6 @@ public class MenuPrincipalActivity extends AppCompatActivity {
 
             }
         });
-
     }
-
-
-
 
 }

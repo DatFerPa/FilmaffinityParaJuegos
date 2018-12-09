@@ -29,7 +29,6 @@ public class DetallesActivity extends AppCompatActivity {
         tituloVideojuego.setText(videojuego.getTitulo());
         descripcionVideojuego.setText(videojuego.getDescripcion());
         Picasso.get().load(Uri.parse(videojuego.getUri_imagen())).resize(500  ,500).into(imagenVideojuego);
-
     }
 
     public void addItems(){
