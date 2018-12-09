@@ -15,6 +15,7 @@ import com.igdb.api_android_java.callback.OnSuccessCallback;
 import com.igdb.api_android_java.wrapper.IGDBWrapper;
 import com.igdb.api_android_java.wrapper.Parameters;
 import com.igdb.api_android_java.wrapper.Version;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -77,7 +78,8 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         for(int i = 0; i <videojuegosNuevos.size(); i++){
             ImageButton buttonI;
             buttonI = new ImageButton(getApplicationContext());
-            buttonI.setImageURI( Uri.parse(videojuegosNuevos.get(i).getUri_imagen()));
+            //buttonI.setImageURI( Uri.parse(videojuegosNuevos.get(i).getUri_imagen()));
+            Picasso.get().load(Uri.parse(videojuegosNuevos.get(i).getUri_imagen())).resize(150,150).into(buttonI);
             buttonI.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
