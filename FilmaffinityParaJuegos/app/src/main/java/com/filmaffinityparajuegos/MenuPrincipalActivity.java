@@ -2,6 +2,7 @@ package com.filmaffinityparajuegos;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +31,8 @@ public class MenuPrincipalActivity extends AppCompatActivity {
     LinearLayout layout;
     ArrayList<Videojuego> videojuegosNuevos = new ArrayList<>();
     ArrayList<Videojuego> videojuegosPopulares = new ArrayList<>();
+    private Videojuego videojuegoActual;
+    public static final String NV = "com.filmaffinityparajuegos";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +81,9 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         for(int i = 0; i <videojuegosNuevos.size(); i++){
             ImageButton buttonI;
             buttonI = new ImageButton(getApplicationContext());
-            //buttonI.setImageURI( Uri.parse(videojuegosNuevos.get(i).getUri_imagen()));
-            Picasso.get().load(Uri.parse(videojuegosNuevos.get(i).getUri_imagen())).resize(150,150).into(buttonI);
+            Picasso.get().load(Uri.parse(videojuegosNuevos.get(i).getUri_imagen())).resize(500  ,500).into(buttonI);
+            videojuegoActual = videojuegosNuevos.get(i);
+            buttonI.setId(i);
             buttonI.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -87,6 +91,8 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                     //mas adelante tendremos que crear una clase juegoViewButton para meterlo aqui y que tenga la info del juego
                     Toast.makeText(getApplicationContext(), "Ha clicado en un juego", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
+                    ImageButton btn = (ImageButton) findViewById(view.getId());
+                    intent.putExtra(NV,   videojuegosNuevos.get(btn.getId()));
                     startActivity(intent);
                 }
             });
