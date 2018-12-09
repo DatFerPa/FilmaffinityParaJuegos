@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FilmaffinityParaJuegos</string>
+    <string name="Juegos_Nuevos">Juegos Nuevos</string>
+    <string name="Juegos_Populares">Juegos Populares</string>
 </resources>

@@ -20,7 +20,7 @@ public class DetallesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detalles);
+        setContentView(R.layout.layout_detalles_juego);
         Intent intent = getIntent();
         videojuego = intent.getParcelableExtra(MenuPrincipalActivity.NV);
         imagenVideojuego = (ImageView) findViewById(R.id.imagenJuego);
@@ -29,6 +29,7 @@ public class DetallesActivity extends AppCompatActivity {
         tituloVideojuego.setText(videojuego.getTitulo());
         descripcionVideojuego.setText(videojuego.getDescripcion());
         Picasso.get().load(Uri.parse(videojuego.getUri_imagen())).resize(500  ,500).into(imagenVideojuego);
+
 
     }
 
