@@ -39,6 +39,18 @@ public class Videojuego implements Parcelable {
 
     }
 
+    @Override
+    public String toString() {
+        return "Videojuego{" +
+                "id_juego='" + id_juego + '\'' +
+                ", titulo='" + titulo + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", uri_imagen='" + uri_imagen + '\'' +
+                ", uri_video='" + uri_video + '\'' +
+                ", id_developer='" + id_developer + '\'' +
+                '}';
+    }
+
     public String getId_juego() {
         return id_juego;
     }

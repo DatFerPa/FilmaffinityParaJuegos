@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -111,7 +112,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     try {
                         JSONObject obj = jsonArray.getJSONObject(i);
-                        System.out.println(obj);
+                        //System.out.println(obj);
                         Videojuego juego = new Videojuego();
                         juego.setId_juego(obj.getString("id"));
                         if (obj.opt("summary") != null)
@@ -121,7 +122,8 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                         juego.setTitulo(obj.getString("name"));
                         // juego.setId_developer(obj.getString(""));
                         juego.setUri_imagen("https:" + obj.getJSONObject("cover").getString("url"));
-                        System.out.println(juego.descripcion);
+                        //System.out.println(juego.descripcion);
+                        System.out.println(juego.toString());
                         videojuegosNuevos.add(juego);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -175,4 +177,41 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         });
     }
 
+    public void buscarJuego(View view) {
+        TextView texto = (TextView) findViewById(R.id.TextoJuegoParaBuscar);
+        IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(), "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
+        Parameters params = new Parameters().addSearch(texto.getText().toString()).addFields("*").addFilter("[category][eq]=0").addLimit("1");
+        wrapper.games(params, new OnSuccessCallback() {
+            @Override
+            public void onSuccess(@NotNull JSONArray jsonArray) {
+
+                    try {
+                        JSONObject obj = jsonArray.getJSONObject(0);
+                        System.out.println(obj);
+                        Videojuego juego = new Videojuego();
+                        juego.setId_juego(obj.getString("id"));
+                        if (obj.opt("summary") != null)
+                            juego.setDescripcion(obj.getString("summary"));
+                        else
+                            juego.setDescripcion("No tiene descripcion");
+                        juego.setTitulo(obj.getString("name"));
+                        // juego.setId_developer(obj.getString(""));
+                        juego.setUri_imagen("https:" + obj.getJSONObject("cover").getString("url"));
+                        System.out.println(juego.descripcion);
+
+                        Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
+                        intent.putExtra(NV, juego);
+                        startActivity(intent);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+            }
+
+            @Override
+            public void onError(@NotNull VolleyError volleyError) {
+
+            }
+        });
+
+    }
 }
