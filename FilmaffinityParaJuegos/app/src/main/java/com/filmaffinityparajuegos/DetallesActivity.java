@@ -20,7 +20,8 @@ public class DetallesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_detalles_juego);
+        setContentView(R.layout.activity_detalles);
+
         Intent intent = getIntent();
         videojuego = intent.getParcelableExtra(MenuPrincipalActivity.NV);
         imagenVideojuego = (ImageView) findViewById(R.id.imagenJuego);
