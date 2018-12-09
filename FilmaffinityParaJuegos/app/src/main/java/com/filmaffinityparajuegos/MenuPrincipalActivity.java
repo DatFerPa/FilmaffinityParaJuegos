@@ -24,11 +24,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MenuPrincipalActivity extends AppCompatActivity {
 
     ArrayList<ImageButton> botones = new ArrayList<ImageButton>();
     LinearLayout layout;
+    LinearLayout layouPopu;
     ArrayList<Videojuego> videojuegosNuevos = new ArrayList<>();
     ArrayList<Videojuego> videojuegosPopulares = new ArrayList<>();
     private Videojuego videojuegoActual;
@@ -39,6 +41,63 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
         layout = findViewById(R.id.LayoutMain);
+        layouPopu = findViewById(R.id.LayoutPopular);
+        obtenerJuegosActuales();
+        obtenerJuegosPopulares();
+
+    }
+
+
+
+
+    private void generateBotones() {
+
+        for(int i = 0; i <videojuegosNuevos.size(); i++){
+            ImageButton buttonI;
+            buttonI = new ImageButton(getApplicationContext());
+            Picasso.get().load(Uri.parse(videojuegosNuevos.get(i).getUri_imagen())).resize(500  ,500).into(buttonI);
+            buttonI.setId(i);
+            buttonI.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Aqui hay que hacer la llama para cada uno de los juegos
+                    //mas adelante tendremos que crear una clase juegoViewButton para meterlo aqui y que tenga la info del juego
+                    Toast.makeText(getApplicationContext(), "Ha clicado en un juego", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
+                    ImageButton btn = (ImageButton) findViewById(view.getId());
+
+                    intent.putExtra(NV,   videojuegosNuevos.get(btn.getId()));
+                    startActivity(intent);
+                }
+            });
+            layout.addView(buttonI);
+        }
+
+        for(int i = 0; i <videojuegosPopulares.size(); i++){
+            ImageButton buttonI;
+            buttonI = new ImageButton(getApplicationContext());
+            Picasso.get().load(Uri.parse(videojuegosPopulares.get(i).getUri_imagen())).resize(500  ,500).into(buttonI);
+            buttonI.setId(i);
+            buttonI.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Aqui hay que hacer la llama para cada uno de los juegos
+                    //mas adelante tendremos que crear una clase juegoViewButton para meterlo aqui y que tenga la info del juego
+                    Toast.makeText(getApplicationContext(), "Ha clicado en un juego", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
+                    ImageButton btn = (ImageButton) findViewById(view.getId());
+
+                    intent.putExtra(NV,   videojuegosPopulares.get(btn.getId()));
+                    startActivity(intent);
+                }
+            });
+            layouPopu.addView(buttonI);
+        }
+    }
+
+
+
+    private void obtenerJuegosActuales(){
         IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext() , "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD,false);
         Parameters params = new Parameters().addFields("*").addFilter("[category][eq]=0").addOrder("published_at:desc").addLimit("6");
         wrapper.games(params, new OnSuccessCallback() {
@@ -73,30 +132,49 @@ public class MenuPrincipalActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
-    private void generateBotones() {
 
-        for(int i = 0; i <videojuegosNuevos.size(); i++){
-            ImageButton buttonI;
-            buttonI = new ImageButton(getApplicationContext());
-            Picasso.get().load(Uri.parse(videojuegosNuevos.get(i).getUri_imagen())).resize(500  ,500).into(buttonI);
-            videojuegoActual = videojuegosNuevos.get(i);
-            buttonI.setId(i);
-            buttonI.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //Aqui hay que hacer la llama para cada uno de los juegos
-                    //mas adelante tendremos que crear una clase juegoViewButton para meterlo aqui y que tenga la info del juego
-                    Toast.makeText(getApplicationContext(), "Ha clicado en un juego", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
-                    ImageButton btn = (ImageButton) findViewById(view.getId());
-                    intent.putExtra(NV,   videojuegosNuevos.get(btn.getId()));
-                    startActivity(intent);
+    private void obtenerJuegosPopulares() {
+
+        IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext() , "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD,false);
+        Parameters params = new Parameters().addFields("*").addFilter("[category][eq]=0").addOrder("popularity:desc").addLimit("6");
+        wrapper.games(params, new OnSuccessCallback() {
+            @Override
+            public void onSuccess(@NotNull JSONArray jsonArray) {
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        JSONObject obj = jsonArray.getJSONObject(i);
+                        System.out.println(obj);
+                        Videojuego juego = new Videojuego();
+                        juego.setId_juego(obj.getString("id"));
+                        if(obj.opt("summary") != null)
+                            juego.setDescripcion(obj.getString("summary"));
+                        else
+                            juego.setDescripcion("No tiene descripcion");
+                        juego.setTitulo(obj.getString("name"));
+                        // juego.setId_developer(obj.getString(""));
+                        juego.setUri_imagen("https:" + obj.getJSONObject("cover").getString("url"));
+                        System.out.println(juego.descripcion);
+                        videojuegosPopulares.add(juego);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-            });
-            layout.addView(buttonI);
-        }
+                generateBotones();
+            }
+
+            @Override
+            public void onError(@NotNull VolleyError volleyError) {
+
+            }
+        });
+
     }
+
+
+
+
 }

@@ -25,7 +25,6 @@ public class DetallesActivity extends AppCompatActivity {
         imagenVideojuego = (ImageView) findViewById(R.id.imagenJuego);
         Picasso.get().load(Uri.parse(videojuego.getUri_imagen())).resize(500  ,500).into(imagenVideojuego);
 
-
     }
 
     public void addItems(){
