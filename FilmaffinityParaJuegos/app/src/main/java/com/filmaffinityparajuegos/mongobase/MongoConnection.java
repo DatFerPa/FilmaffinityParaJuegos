@@ -16,6 +16,9 @@ public class MongoConnection {
         db = mongoClient.getDatabase(uri.getDatabase());
     }
 
+    public MongoConnection getMongo(){
+        return this;
+    }
     public MongoDatabase getBase(){
         return db;
     }

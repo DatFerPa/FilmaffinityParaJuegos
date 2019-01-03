@@ -47,32 +47,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu_principal);
         layout = findViewById(R.id.LayoutMain);
         layouPopu = findViewById(R.id.LayoutPopular);
-       /* obtenerJuegosActuales();
-        obtenerJuegosPopulares();*/
-        //Juegos Nuevos
-        /*
-        Parameters params = new Parameters().addFields("*").addFilter("[category][eq]=0").addOrder("published_at:desc").addLimit("6");
-        try {
-            videojuegosNuevos =  new CargarVideojuego().execute(params).get();
-            System.out.println(videojuegosNuevos.size());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        generateBotonesNuevos();
-        //Juegos populares
-        Parameters params2 = new Parameters().addFields("*").addFilter("[category][eq]=0").addOrder("popularity:desc").addLimit("6");
-        try {
-            videojuegosPopulares =  new CargarVideojuego().execute(params2).get();
-            System.out.println(videojuegosPopulares.size());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        GenerateBotonesPopulares();
-        */
+
 
             new CargarVideojuegosNuevos().execute();
             new CargarVideojuegosPopulares().execute();
@@ -81,8 +56,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
 
 
     private void generateBotonesNuevos() {
-        System.out.println("=======================================");
-        System.out.println(videojuegosNuevos.size());
+
         for (int i = 0; i < videojuegosNuevos.size(); i++) {
             ImageButton buttonI;
             buttonI = new ImageButton(getApplicationContext());
@@ -106,8 +80,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
     }
 
     private void GenerateBotonesPopulares() {
-        System.out.println("=======================================");
-        System.out.println(videojuegosPopulares.size());
+
         for (int i = 0; i < videojuegosPopulares.size(); i++) {
             ImageButton buttonI;
             buttonI = new ImageButton(getApplicationContext());
@@ -297,63 +270,5 @@ public class MenuPrincipalActivity extends AppCompatActivity {
             return null;
         }
     }
-
-
-/*
-    private class CargarVideojuego extends AsyncTask<Parameters,Void,List<Videojuego>>{
-        List<Videojuego> juegos = new ArrayList<>();
-        private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(MenuPrincipalActivity.this);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(List<Videojuego> videojuegos) {
-            super.onPostExecute(videojuegos);
-            this.progressDialog.dismiss();
-            Toast.makeText(getApplicationContext(),"Los juegos se han cargado",Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        protected List<Videojuego> doInBackground(Parameters... parameters) {
-            IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(), "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
-            wrapper.games(parameters[0], new OnSuccessCallback() {
-                @Override
-                public void onSuccess(@NotNull JSONArray jsonArray) {
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        try {
-                            JSONObject obj = jsonArray.getJSONObject(i);
-                            //System.out.println(obj);
-                            Videojuego juego = new Videojuego();
-                            juego.setId_juego(obj.getString("id"));
-                            if (obj.opt("summary") != null)
-                                juego.setDescripcion(obj.getString("summary"));
-                            else
-                                juego.setDescripcion("No tiene descripcion");
-                            juego.setTitulo(obj.getString("name"));
-                            // juego.setId_developer(obj.getString(""));
-                            juego.setUri_imagen("https:" + obj.getJSONObject("cover").getString("url"));
-                            //System.out.println(juego.descripcion);
-                            System.out.println(juego.toString());
-                            juegos.add(juego);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                @Override
-                public void onError(@NotNull VolleyError volleyError) {
-                }
-            });
-            return juegos;
-        }
-    }
-*/
 
 }
