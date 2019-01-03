@@ -11,6 +11,7 @@ public class UserDatabase {
     }
 
     public void addUser(){
+
         DBCollection usuarios =  base.getCollection("usuarios");
     }
 
