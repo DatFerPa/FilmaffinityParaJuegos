@@ -15,7 +15,8 @@ public class UserDatabase {
     MongoDatabase base;
 
     public UserDatabase() {
-        base = new MongoConnection().getClient().getDatabase("videojogos");
+        MongoConnection conexion = new MongoConnection();
+        base = conexion.getClient().getDatabase("videojogos");
     }
 
     public void addUser(String name, String password){
@@ -30,6 +31,8 @@ public class UserDatabase {
 
         MongoCollection<Document> collection = base.getCollection("usuarios");
         Document usuario_base = collection.find(eq("name", name)).first();
+        if( usuario_base == null)
+            return null;
         if(usuario_base.get("password").toString().equals(password)){
             String nombre = usuario_base.get("name").toString();
             String contraseña = usuario_base.get("password").toString();

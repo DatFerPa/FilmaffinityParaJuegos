@@ -22,7 +22,8 @@ public class AmistadDatabase {
     MongoDatabase base;
 
     public AmistadDatabase(){
-        base = new MongoConnection().getClient().getDatabase("videojogos");
+        MongoConnection conexion = new MongoConnection();
+        base = conexion.getClient().getDatabase("videojogos");
     }
 
     public void addAmistad(String nombre1, String nombre2){
