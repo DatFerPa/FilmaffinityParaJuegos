@@ -4,14 +4,24 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.filmaffinityparajuegos.data.Usuario;
-import com.filmaffinityparajuegos.mongobase.UserDatabase;
+import com.filmaffinityparajuegos.mongobase.UsuarioDatabase;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.nio.charset.Charset;
 
@@ -20,12 +30,12 @@ public class LoginActivity extends AppCompatActivity {
     private TextView nombreUsuario;
     private TextView passWordUsuario;
     private SharedPreferences sharedPreferences;
-    private  UserDatabase usrDB;
+    private  UsuarioDatabase usrDB = new UsuarioDatabase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        usrDB = new UserDatabase();
+
         setContentView(R.layout.activity_login);
         nombreUsuario = findViewById(R.id.EditTextNombreUser);
         passWordUsuario = findViewById(R.id.EditTextPassword);
@@ -37,7 +47,14 @@ public class LoginActivity extends AppCompatActivity {
                 passWordUsuario.getText().toString());
         String nombreUser = nombreUsuario.getText().toString();
         String passwordHashed = hashPassword();
-        Usuario usuario = usrDB.getUser(nombreUser,passwordHashed);
+        Usuario usuario = null;
+        try {
+            usuario = usrDB.getUser(nombreUser,passwordHashed,view);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if(usuario !=null){
             addPreferencesUserAndPassword(nombreUser,passwordHashed);
 
@@ -65,14 +82,14 @@ public class LoginActivity extends AppCompatActivity {
         //comprabación del usuario
         //Si el getUser devuelve null, significa que el usuario no existe
         System.out.println("llegue aqui 1");
-        if(usrDB.getUser(nombreUser,passwordHashed)== null) {
+        if(usrDB.getUser(nombreUser,passwordHashed,view)== null) {
             System.out.println("llegue aqui 2");
             //shared preferences
             addPreferencesUserAndPassword(nombreUser,passwordHashed);
             System.out.println("llegue aqui 3");
 
             //añadimos al usuario a la base de datos
-            usrDB.addUser(nombreUser,passwordHashed);
+            usrDB.addUser(nombreUser,passwordHashed,view);
             System.out.println("llegue aqui 4");
 
             //pasamos a la activity principal
