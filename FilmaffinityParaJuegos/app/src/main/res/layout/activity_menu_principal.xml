@@ -9,11 +9,11 @@
     <HorizontalScrollView
         android:id="@+id/ScrollMain"
         android:layout_width="382dp"
-        android:layout_height="163dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="107dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
@@ -34,9 +34,9 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="229dp"
-        android:layout_height="35dp"
+        android:layout_height="39dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="156dp"
         android:layout_marginEnd="8dp"
         android:text="@string/Juegos_Nuevos"
         android:textSize="24sp"
@@ -50,12 +50,12 @@
         android:layout_width="229dp"
         android:layout_height="35dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="@string/Juegos_pop"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.057"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ScrollMain" />
 
@@ -63,16 +63,16 @@
     <HorizontalScrollView
         android:id="@+id/ScrollPopular"
         android:layout_width="383dp"
-        android:layout_height="167dp"
+        android:layout_height="128dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.652"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.512">
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
 
@@ -89,13 +89,14 @@
         android:id="@+id/textInputLayout"
         android:layout_width="217dp"
         android:layout_height="55dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:hint="@string/Busque_su_Juego"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.823">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/TextoJuegoParaBuscar"
@@ -116,8 +117,10 @@
         android:onClick="buscarJuego"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.533"
         app:layout_constraintStart_toEndOf="@+id/textInputLayout"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.795"
         app:srcCompat="@android:drawable/ic_menu_search" />
 
 </android.support.constraint.ConstraintLayout>
