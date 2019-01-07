@@ -12,9 +12,10 @@ import org.bson.Document;
 import static com.mongodb.client.model.Filters.eq;
 
 public class UserDatabase {
-    MongoDatabase base = new MongoConnection().getClient().getDatabase("videojogos");
+    MongoDatabase base;
 
     public UserDatabase() {
+        base = new MongoConnection().getClient().getDatabase("videojogos");
     }
 
     public void addUser(String name, String password){

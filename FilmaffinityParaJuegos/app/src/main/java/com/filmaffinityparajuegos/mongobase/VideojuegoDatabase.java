@@ -10,7 +10,11 @@ import org.bson.Document;
 public class VideojuegoDatabase {
 
 
-    MongoDatabase base = new MongoConnection().getClient().getDatabase("videojogos");
+    MongoDatabase base ;
+
+    public VideojuegoDatabase(){
+        base = new MongoConnection().getClient().getDatabase("videojogos");
+    }
 
     public void addVideojuego(int id_videojuego, String id_usuario ,String comentario, double valoracion, int tener_querer){
         MongoCollection<Document> videojuegos =  base.getCollection("videojuegos");

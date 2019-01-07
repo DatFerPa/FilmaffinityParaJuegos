@@ -19,7 +19,11 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class AmistadDatabase {
 
-    MongoDatabase base = new MongoConnection().getClient().getDatabase("videojogos");
+    MongoDatabase base;
+
+    public AmistadDatabase(){
+        base = new MongoConnection().getClient().getDatabase("videojogos");
+    }
 
     public void addAmistad(String nombre1, String nombre2){
         MongoCollection<Document> amistades =  base.getCollection("amistades");
