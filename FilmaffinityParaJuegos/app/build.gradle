@@ -36,4 +36,5 @@ dependencies {
     implementation 'com.github.igdb:api-android-java:1.3'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.android.support:design:27.1.1'
+    implementation 'com.google.guava:guava:15.0'
 }

@@ -3,4 +3,20 @@
     <string name="Juegos_Nuevos">Juegos Nuevos</string>
     <string name="Busque_su_Juego">Busque su juego</string>
     <string name="Juegos_pop">Juegos Populares</string>
+    <string name="title_activity_drawer_menu">DrawerActivityMenu</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="nombre_string">Nombre de usuario</string>
+    <string name="password_string">Contraseña</string>
+    <string name="LoginButton">Login</string>
+    <string name="SignInButton">Sign In</string>
+
+    <string name="ID_SHARED_PREFERENCES">SHARED_PREFERENCES</string>
+    <string name="shared_nombre_user">NombreUser</string>
+    <string name="shared_password_user">PasswordUser</string>
 </resources>
