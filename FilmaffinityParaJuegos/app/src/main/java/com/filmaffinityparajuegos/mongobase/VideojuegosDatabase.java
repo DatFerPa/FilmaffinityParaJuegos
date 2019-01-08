@@ -56,7 +56,33 @@ public class VideojuegosDatabase {
         return response;
     }
 
-    public JSONArray addVideojuego(String id_videojuego,String usuario, String comentario,Double valoracion, Context context) {
+    public JSONArray getVideojuegosUsuario(String name, Context context) {
+        String consulta = base + "?q={\"usuario\":\"" + name + "\"}" + claveConsulta;
+        RequestQueue request = Volley.newRequestQueue(context);
+        RequestFuture<JSONArray> future = RequestFuture.newFuture();
+        JSONArray response = null;
+        System.out.println(consulta);
+
+        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET, consulta, null, future, future);
+
+        request.add(jsonObjectRequest);
+
+        try {
+            response = future.get(3, TimeUnit.SECONDS); // Blocks for at most 10 seconds.
+        } catch (InterruptedException e) {
+            Log.d(TAG, "interrupted");
+        } catch (ExecutionException e) {
+            Log.d(TAG, "execution");
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, response.toString());
+
+        return response;
+    }
+
+    public JSONArray addVideojuego(String id_videojuego,String usuario, String comentario,Double valoracion, Integer tener_querer, Context context) {
 
         String consulta = base + clave;
         RequestQueue request = Volley.newRequestQueue(context);
@@ -67,6 +93,7 @@ public class VideojuegosDatabase {
         videojuego.put("usuario", usuario);
         videojuego.put("comentario", comentario);
         videojuego.put("valoracion", valoracion.toString());
+        videojuego.put("tener_querer",tener_querer.toString());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, consulta, new JSONObject(videojuego), future, future);
         request.add(jsonObjectRequest);
         try {
