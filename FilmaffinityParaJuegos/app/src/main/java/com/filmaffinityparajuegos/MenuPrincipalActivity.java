@@ -47,6 +47,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         layout = findViewById(R.id.LayoutMain);
         layouPopu = findViewById(R.id.LayoutPopular);
 
+
         new CargarVideojuegosNuevos().execute();
         new CargarVideojuegosPopulares().execute();
 

@@ -162,6 +162,8 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         //
         layout = findViewById(R.id.LayoutMain);
         layouPopu = findViewById(R.id.LayoutPopular);
+        layouPopu.removeAllViews();
+        layout.removeAllViews();
         System.out.println("");
         System.out.println("new CargarVideojuegosNuevos().execute();");
         new CargarVideojuegosNuevos().execute();
