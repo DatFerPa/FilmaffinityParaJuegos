@@ -53,7 +53,7 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
 
-        cargarMenuActivo();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,6 +65,8 @@ public class NAvigationDrawerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        cargarMenuActivo();
     }
 
     @Override
@@ -137,7 +139,6 @@ public class NAvigationDrawerActivity extends AppCompatActivity
     }
 
     private void generateBotonesNuevos() {
-        videojuegosNuevos = new ArrayList<>();
         for (int i = 0; i < videojuegosNuevos.size(); i++) {
             ImageButton buttonI;
             buttonI = new ImageButton(getApplicationContext());
@@ -161,7 +162,6 @@ public class NAvigationDrawerActivity extends AppCompatActivity
     }
 
     private void GenerateBotonesPopulares() {
-        videojuegosPopulares = new ArrayList<>();
         for (int i = 0; i < videojuegosPopulares.size(); i++) {
             ImageButton buttonI;
             buttonI = new ImageButton(getApplicationContext());
@@ -245,6 +245,7 @@ public class NAvigationDrawerActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... voids) {
+            videojuegosPopulares = new ArrayList<>();
             IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(), "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
             Parameters params2 = new Parameters().addFields("*").addFilter("[category][eq]=0").addOrder("popularity:desc").addLimit("6");
             wrapper.games(params2, new OnSuccessCallback() {
@@ -309,6 +310,7 @@ public class NAvigationDrawerActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... voids) {
+            videojuegosNuevos = new ArrayList<>();
             Parameters params = new Parameters().addFields("*").addFilter("[category][eq]=0").addOrder("published_at:desc").addLimit("6");
             IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(), "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
             wrapper.games(params, new
