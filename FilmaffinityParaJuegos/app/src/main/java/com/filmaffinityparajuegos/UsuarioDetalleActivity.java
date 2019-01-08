@@ -1,6 +1,5 @@
 package com.filmaffinityparajuegos;
 
-<<<<<<< Updated upstream
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -19,13 +18,19 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.filmaffinityparajuegos.data.Usuario;
 import com.filmaffinityparajuegos.data.Videojuego;
 import com.filmaffinityparajuegos.data.VideojuegoBase;
 import com.filmaffinityparajuegos.mongobase.VideojuegosDatabase;
+import com.igdb.api_android_java.callback.OnSuccessCallback;
+import com.igdb.api_android_java.wrapper.IGDBWrapper;
 import com.igdb.api_android_java.wrapper.Parameters;
+import com.igdb.api_android_java.wrapper.Version;
+import com.mongodb.util.JSON;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,8 +128,39 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
             //quite lo de aqui, porque estabas haciendo que la app volviese a la siguiente cosa
             int sizeParaRecorrer = (result.size()>10)?10:result.size();
             for(int i=0;i < sizeParaRecorrer;i++){
-                Parameters params = new Parameters().addFields("*").addFilter();
+                //comprobar esta mierda
+                Parameters params = new Parameters().addFields("*").addFilter("[id][eq]="+result.get(i).getId_juego());
+                IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(),"cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
+                wrapper.games(params, new
+                        OnSuccessCallback() {
+                            @Override
+                            public void onSuccess(@NotNull JSONArray jsonArray) {
+                                try{
+                                    JSONObject obj = jsonArray.getJSONObject(0);
+                                    System.out.println("Juego de amigo: \n"+obj);
+                                    Videojuego videojuego = new Videojuego();
+                                    videojuego.setId_juego(obj.getString("id"));
+                                    if (obj.opt("summary") != null)
+                                        videojuego.setDescripcion(obj.getString("summary"));
+                                    else
+                                        videojuego.setDescripcion("No tiene descripcion");
+                                    videojuego.setTitulo(obj.getString("name"));
+                                    // juego.setId_developer(obj.getString(""));
+                                    videojuego.setUri_imagen("https:" + obj.getJSONObject("cover").getString("url"));
+                                    System.out.println(videojuego.toString());
+                                    videojuegosQueTiene.add(videojuego);
+                                }catch (JSONException e){
+                                    e.printStackTrace();
+                                }
+                            }
+                            @Override
+                            public void onError(@NotNull VolleyError volleyError) {
+                            }
+                        }
+                );
             }
+            generateBotonesTiene();
+
         }
     }
     
