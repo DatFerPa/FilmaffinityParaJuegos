@@ -1,6 +1,7 @@
 package com.filmaffinityparajuegos;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView nombreUsuario;
     private TextView passWordUsuario;
-    private SharedPreferences sharedPreferences;
     private  UsuarioDatabase usrDB = new UsuarioDatabase();
 
     @Override
@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
                 passWordUsuario.getText().toString());
         String nombreUser = nombreUsuario.getText().toString();
         String passwordHashed = hashPassword();
+        /*
         Usuario usuario = null;
         try {
             usuario = usrDB.getUser(nombreUser,passwordHashed,view);
@@ -65,10 +66,15 @@ public class LoginActivity extends AppCompatActivity {
                     nombreUsuario.getText().toString() + " - - Contraseña: "+
                     passWordUsuario.getText().toString()+" - - Contraseña Hasshed: "+passwordHashed);
 
+
+            accederApp();
         }else{
             Toast.makeText(getApplicationContext(),
                     "Usuario o contraseña incorrectas",Toast.LENGTH_LONG).show();
         }
+        */
+        addPreferencesUserAndPassword(nombreUser,passwordHashed);
+        accederApp();
 
     }
 
@@ -81,16 +87,13 @@ public class LoginActivity extends AppCompatActivity {
         String passwordHashed = hashPassword();
         //comprabación del usuario
         //Si el getUser devuelve null, significa que el usuario no existe
-        System.out.println("llegue aqui 1");
+        /*
         if(usrDB.getUser(nombreUser,passwordHashed,view)== null) {
-            System.out.println("llegue aqui 2");
             //shared preferences
             addPreferencesUserAndPassword(nombreUser,passwordHashed);
-            System.out.println("llegue aqui 3");
 
             //añadimos al usuario a la base de datos
             usrDB.addUser(nombreUser,passwordHashed,view);
-            System.out.println("llegue aqui 4");
 
             //pasamos a la activity principal
             System.out.println("Se ha realizado un SIGN IN de manera correcta para " +
@@ -100,24 +103,25 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
+            accederApp();
 
         }else{
             Toast.makeText(getApplicationContext(),
                     "El usuario ya existe, seleccione otro nombre",Toast.LENGTH_LONG).show();
         }
-
-
+*/
+        addPreferencesUserAndPassword(nombreUser,passwordHashed);
+        accederApp();
     }
 
     private void addPreferencesUserAndPassword(String usuario, String pass){
-        sharedPreferences = this.getSharedPreferences(getString(
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(
                 R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putString(getString(R.string.shared_nombre_user), usuario);
         editor.putString(getString(R.string.shared_password_user), pass);
-        editor.commit();
+        editor.apply();
     }
 
     private String hashPassword(){
@@ -126,5 +130,9 @@ public class LoginActivity extends AppCompatActivity {
          return hashCode.toString();
     }
 
+    private void accederApp(){
+        Intent intent = new Intent(getApplicationContext(),NAvigationDrawerActivity.class);
+        startActivity(intent);
+    }
 
 }

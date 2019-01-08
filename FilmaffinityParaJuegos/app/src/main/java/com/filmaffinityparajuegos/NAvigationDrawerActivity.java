@@ -1,7 +1,9 @@
 package com.filmaffinityparajuegos;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -50,17 +52,10 @@ public class NAvigationDrawerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
+
+        cargarMenuActivo();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -86,6 +81,9 @@ public class NAvigationDrawerActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navigation_drawer, menu);
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                getString(R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
+        ((TextView)findViewById(R.id.nombreUserMenu)).setText(sharedPref.getString(getString(R.string.shared_nombre_user),getString(R.string.nombre_string)));
         return true;
     }
 
@@ -126,6 +124,13 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         return true;
     }
 
+    private void cargarMenuActivo(){
+        if(findViewById(R.id.menuPrincipalInclude).getVisibility()==View.VISIBLE) {
+            System.out.println("Antes de cargar menu principal");
+            cargarMenuPrincipalActivity();
+        }
+    }
+
     /*
         Aqui se hace todo
          lo relacionado con el menu principal
@@ -140,14 +145,14 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         //desactivar el resto de las vistas
         layout = findViewById(R.id.LayoutMain);
         layouPopu = findViewById(R.id.LayoutPopular);
-
-
+        System.out.println("");
+        System.out.println("new CargarVideojuegosNuevos().execute();");
         new CargarVideojuegosNuevos().execute();
+        System.out.println("new CargarVideojuegosPopulares().execute();");
         new CargarVideojuegosPopulares().execute();
     }
 
     private void generateBotonesNuevos() {
-        layout.removeAllViews();
         videojuegosNuevos = new ArrayList<>();
         for (int i = 0; i < videojuegosNuevos.size(); i++) {
             ImageButton buttonI;
@@ -172,7 +177,6 @@ public class NAvigationDrawerActivity extends AppCompatActivity
     }
 
     private void GenerateBotonesPopulares() {
-        layouPopu.removeAllViews();
         videojuegosPopulares = new ArrayList<>();
         for (int i = 0; i < videojuegosPopulares.size(); i++) {
             ImageButton buttonI;
@@ -265,7 +269,7 @@ public class NAvigationDrawerActivity extends AppCompatActivity
                     for (int i = 0; i < jsonArray.length(); i++) {
                         try {
                             JSONObject obj = jsonArray.getJSONObject(i);
-                            //System.out.println(obj);
+                            System.out.println(obj);
                             Videojuego juego = new Videojuego();
                             juego.setId_juego(obj.getString("id"));
                             if (obj.opt("summary") != null)
@@ -331,7 +335,7 @@ public class NAvigationDrawerActivity extends AppCompatActivity
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 try {
                                     JSONObject obj = jsonArray.getJSONObject(i);
-                                    //System.out.println(obj);
+                                    System.out.println(obj);
                                     Videojuego juego = new Videojuego();
                                     juego.setId_juego(obj.getString("id"));
                                     if (obj.opt("summary") != null)
