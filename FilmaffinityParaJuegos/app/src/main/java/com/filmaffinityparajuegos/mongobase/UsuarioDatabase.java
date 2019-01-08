@@ -81,31 +81,6 @@ public class UsuarioDatabase {
     }
 
 
-    //    public boolean addUser(String name, String password, View view) {
-//        final boolean[] creado = {false};
-//        if (getUser(name, password, view.getContext()) == null) {
-//            String consulta = base+ clave;
-//            RequestQueue request = Volley.newRequestQueue(view.getContext());
-//            Map<String, String> usuario = new HashMap<String,String>();
-//            usuario.put("name", name);
-//            usuario.put("password", password);
-//            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(com.android.volley.Request.Method.POST, consulta, new JSONObject(usuario), new Response.Listener<JSONObject>() {
-//                @Override
-//                public void onResponse(JSONObject response) {
-//                    creado[0] = true;
-//                }
-//            }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//                    creado[0] = false;
-//                }
-//            });
-//            request.add(jsonObjectRequest);
-//            return creado[0];
-//        } else {
-//            return creado[0];
-//        }
-//    }
     public JSONArray addUser(String name, String password, Context context) {
         final boolean[] creado = {false};
         String consulta = base + clave;

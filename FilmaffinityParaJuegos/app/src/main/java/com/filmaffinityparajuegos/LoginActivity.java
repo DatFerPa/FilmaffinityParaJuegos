@@ -1,6 +1,7 @@
 package com.filmaffinityparajuegos;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -137,6 +138,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 Toast.makeText(ctx,
                         "USUARIO CORRECTO",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(ctx, NAvigationDrawerActivity.class);
+                startActivity(intent);
 
             }else{
                 Toast.makeText(ctx,
@@ -172,8 +175,9 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(JSONArray result)
         {
-            // runs on the UI thread
-            // do something with the result
+
+
+
         }
     }
 
@@ -205,6 +209,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Toast.makeText(ctx,
                         "Usuario creado",Toast.LENGTH_LONG).show();
+
 
             }else{
                 Toast.makeText(ctx,
