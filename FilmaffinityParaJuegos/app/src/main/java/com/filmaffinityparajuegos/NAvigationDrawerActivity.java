@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.filmaffinityparajuegos.data.Videojuego;
+import com.filmaffinityparajuegos.mongobase.AmistadesDatabase;
 import com.igdb.api_android_java.callback.OnSuccessCallback;
 import com.igdb.api_android_java.wrapper.IGDBWrapper;
 import com.igdb.api_android_java.wrapper.Parameters;
@@ -45,14 +46,18 @@ public class NAvigationDrawerActivity extends AppCompatActivity
 
 
     public static final String NV = "com.filmaffinityparajuegos";
-
+    private String nombreUsuarioActivo;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
 
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                getString(R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
+        nombreUsuarioActivo =sharedPref.getString(getString(R.string.shared_nombre_user),getString(R.string.nombre_string));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -116,7 +121,9 @@ public class NAvigationDrawerActivity extends AppCompatActivity
             
 
         }else if(id == R.id.amigosMenu){
-
+            if(findViewById(R.id.menuAmigosInclude).getVisibility()!=View.VISIBLE) {
+                cargarMenuAmigos();
+            }
         }
 
         return true;
@@ -124,8 +131,12 @@ public class NAvigationDrawerActivity extends AppCompatActivity
 
     private void cargarMenuActivo(){
         if(findViewById(R.id.menuPrincipalInclude).getVisibility()==View.VISIBLE) {
-            System.out.println("Antes de cargar menu principal");
+
             cargarMenuPrincipalActivity();
+        }
+
+        if(findViewById(R.id.menuAmigosInclude).getVisibility()==View.VISIBLE){
+            cargarMenuAmigos();
         }
     }
 
@@ -140,7 +151,10 @@ public class NAvigationDrawerActivity extends AppCompatActivity
     private List<Videojuego> videojuegosPopulares = new ArrayList<>();
 
     private void cargarMenuPrincipalActivity(){
+        findViewById(R.id.menuPrincipalInclude).setVisibility(View.VISIBLE);
         //desactivar el resto de las vistas
+        findViewById(R.id.menuAmigosInclude).setVisibility(View.GONE);
+        //
         layout = findViewById(R.id.LayoutMain);
         layouPopu = findViewById(R.id.LayoutPopular);
         System.out.println("");
@@ -363,11 +377,28 @@ public class NAvigationDrawerActivity extends AppCompatActivity
     }
 
 /*
-
+    Aqui se hace todo
+    lo relacionado con el menu de amigos
  */
+    private TextView nombreUsuarioABuscar;
+
+    private void cargarMenuAmigos(){
+        findViewById(R.id.menuAmigosInclude).setVisibility(View.VISIBLE);
+        //desactivar el resto de las vistas
+        findViewById(R.id.menuPrincipalInclude).setVisibility(View.GONE);
+        //
+
+
+    }
+
+    public void buscarAmigo(View view) {
+        nombreUsuarioABuscar = findViewById(R.id.TextInputEditTextBuscarAmigo);
+
+        //miedas de juan
 
 
 
 
+    }
 
 }

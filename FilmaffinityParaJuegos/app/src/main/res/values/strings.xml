@@ -16,6 +16,10 @@
     <string name="LoginButton">Login</string>
     <string name="SignInButton">Sign In</string>
 
+    <string name="NombreUsuarioABuscar">Usuario que quiere buscar</string>
+    <string name="AddAmigo">Seguir</string>
+    <string name="JuegosDelAmigo">Juegos que tiene:</string>
+
     <string name="ID_SHARED_PREFERENCES">SHARED_PREFERENCES</string>
     <string name="shared_nombre_user">NombreUser</string>
     <string name="shared_password_user">PasswordUser</string>
