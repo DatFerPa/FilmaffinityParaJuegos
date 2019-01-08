@@ -1,6 +1,7 @@
 package com.filmaffinityparajuegos;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView nombreUsuario;
     private TextView passWordUsuario;
-    private SharedPreferences sharedPreferences;
     private  UsuarioDatabase usrDB = new UsuarioDatabase();
     private Usuario usuarioP;
 
@@ -61,6 +61,9 @@ public class LoginActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        */
+        addPreferencesUserAndPassword(nombreUser,passwordHashed);
+        accederApp();
 
         String nombre = null;
         String password = null;
@@ -94,13 +97,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void addPreferencesUserAndPassword(String usuario, String pass){
-        sharedPreferences = this.getSharedPreferences(getString(
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(
                 R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putString(getString(R.string.shared_nombre_user), usuario);
         editor.putString(getString(R.string.shared_password_user), pass);
-        editor.commit();
+        editor.apply();
     }
 
     private String hashPassword(){

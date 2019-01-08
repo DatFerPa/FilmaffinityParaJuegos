@@ -19,4 +19,8 @@
     <string name="ID_SHARED_PREFERENCES">SHARED_PREFERENCES</string>
     <string name="shared_nombre_user">NombreUser</string>
     <string name="shared_password_user">PasswordUser</string>
+    <string name="title_activity_navigation_drawer">NAvigationDrawerActivity</string>
+
+    <string name="Logout">Cerrar sesión</string>
+    <string name="menuPrincipal">Novedades</string>
 </resources>
