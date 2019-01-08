@@ -62,6 +62,7 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
 
         ///añadir sus jueguicos
         new MyVolleyJuegoTiene(this).execute();
+
     }
 
 
@@ -92,7 +93,7 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
         }
     }
 
-    private void generarUnBotonTiene(int identificador){
+    private void generarBoton(int identificador){
         ImageButton buttonI;
         buttonI = new ImageButton(getApplicationContext());
         Picasso.get().load(Uri.parse(videojuegosQueTiene.get(identificador).getUri_imagen()))
@@ -174,8 +175,10 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
         {
             //quite lo de aqui, porque estabas haciendo que la app volviese a la siguiente cosa
             int sizeParaRecorrer = (videojuegos.size()>10)?10:videojuegos.size();
+
             for(int i=0;i < sizeParaRecorrer;i++){
                 //comprobar esta mierda
+
                 Parameters params = new Parameters().addFields("*").addIds(videojuegos.get(i).getId_juego());
                 IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(),"cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
                 wrapper.games(params, new
@@ -196,10 +199,12 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
                                     videojuego.setUri_imagen("https:" + obj.getJSONObject("cover").getString("url"));
                                     System.out.println(videojuego.toString());
                                     videojuegosQueTiene.add(videojuego);
-                                    generarUnBotonTiene(videojuegosQueTiene.size()-1);
+                                    generarBoton(videojuegosQueTiene.size()-1);
+
                                 }catch (JSONException e){
                                     e.printStackTrace();
                                 }
+
                             }
                             @Override
                             public void onError(@NotNull VolleyError volleyError) {
