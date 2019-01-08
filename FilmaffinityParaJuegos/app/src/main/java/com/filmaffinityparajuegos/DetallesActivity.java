@@ -1,14 +1,21 @@
 package com.filmaffinityparajuegos;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.filmaffinityparajuegos.data.Videojuego;
+import com.filmaffinityparajuegos.mongobase.UsuarioDatabase;
+import com.filmaffinityparajuegos.mongobase.VideojuegosDatabase;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
 
 public class DetallesActivity extends AppCompatActivity {
 
@@ -34,4 +41,6 @@ public class DetallesActivity extends AppCompatActivity {
     public void addItems(){
 
     }
+
+
 }
