@@ -92,6 +92,26 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
         }
     }
 
+    private void generarUnBotonTiene(int identificador){
+        ImageButton buttonI;
+        buttonI = new ImageButton(getApplicationContext());
+        Picasso.get().load(Uri.parse(videojuegosQueTiene.get(identificador).getUri_imagen()))
+                .resize(500, 500).into(buttonI);
+        buttonI.setId(identificador);
+        buttonI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Ha clicado en un juego", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
+                ImageButton btn = (ImageButton) findViewById(view.getId());
+
+                intent.putExtra(NAvigationDrawerActivity.NV, videojuegosQueTiene.get(btn.getId()));
+                startActivity(intent);
+            }
+        });
+        layout.addView(buttonI);
+    }
+
     private void asignarAmistad(JSONArray respuesta){
         JSONObject object = null;
         try {
@@ -112,6 +132,9 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
         }
         amistad = aux;
     }
+
+
+
 
 
 
@@ -146,7 +169,6 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
             return videojuegos;
         }
 
-
         @Override
         protected void onPostExecute(List<Videojuego> result)
         {
@@ -174,10 +196,10 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
                                     videojuego.setUri_imagen("https:" + obj.getJSONObject("cover").getString("url"));
                                     System.out.println(videojuego.toString());
                                     videojuegosQueTiene.add(videojuego);
+                                    generarUnBotonTiene(videojuegosQueTiene.size()-1);
                                 }catch (JSONException e){
                                     e.printStackTrace();
                                 }
-                                generateBotonesTiene();
                             }
                             @Override
                             public void onError(@NotNull VolleyError volleyError) {
@@ -185,8 +207,6 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
                         }
                 );
             }
-
-
         }
     }
 
