@@ -119,10 +119,11 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
 
         private Context ctx;
         private JSONArray respuesta = new JSONArray();
-        private List<Videojuego> videojuegos;
+        private List<Videojuego> videojuegos ;
 
         public MyVolleyJuegoTiene(Context hostContext) {
             ctx = hostContext;
+            videojuegos =new ArrayList<Videojuego>();
         }
 
         @Override
@@ -150,10 +151,10 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
         protected void onPostExecute(List<Videojuego> result)
         {
             //quite lo de aqui, porque estabas haciendo que la app volviese a la siguiente cosa
-            int sizeParaRecorrer = (result.size()>10)?10:result.size();
+            int sizeParaRecorrer = (videojuegos.size()>10)?10:videojuegos.size();
             for(int i=0;i < sizeParaRecorrer;i++){
                 //comprobar esta mierda
-                Parameters params = new Parameters().addFields("*").addFilter("[id][eq]="+result.get(i).getId_juego());
+                Parameters params = new Parameters().addFields("*").addIds(videojuegos.get(i).getId_juego());
                 IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(),"cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
                 wrapper.games(params, new
                         OnSuccessCallback() {
@@ -176,6 +177,7 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
                                 }catch (JSONException e){
                                     e.printStackTrace();
                                 }
+                                generateBotonesTiene();
                             }
                             @Override
                             public void onError(@NotNull VolleyError volleyError) {
@@ -183,7 +185,7 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
                         }
                 );
             }
-            generateBotonesTiene();
+
 
         }
     }
