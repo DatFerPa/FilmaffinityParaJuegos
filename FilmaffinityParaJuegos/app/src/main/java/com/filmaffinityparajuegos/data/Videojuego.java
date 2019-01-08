@@ -23,6 +23,10 @@ public class Videojuego implements Parcelable {
         id_developer = in.readString();
     }
 
+    public Videojuego(String id_juego){
+        this.id_juego = id_juego;
+    }
+
     public static final Creator<Videojuego> CREATOR = new Creator<Videojuego>() {
         @Override
         public Videojuego createFromParcel(Parcel in) {
