@@ -57,6 +57,32 @@ public class AmistadesDatabase {
         return response;
     }
 
+    public JSONArray getAmistad(String usuario1, String usuario2, Context context){
+        String consulta = base + "?q={\"seguidor\":\"" + usuario1 + "\", \"seguido\":\""+ usuario2 + "\"}" + claveConsulta;
+        RequestQueue request = Volley.newRequestQueue(context);
+        RequestFuture<JSONArray> future = RequestFuture.newFuture();
+        JSONArray response = null;
+        System.out.println(consulta);
+
+        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET, consulta, null, future, future);
+
+        request.add(jsonObjectRequest);
+
+        try {
+            response = future.get(3, TimeUnit.SECONDS); // Blocks for at most 10 seconds.
+        } catch (InterruptedException e) {
+            Log.d(TAG, "interrupted");
+        } catch (ExecutionException e) {
+            Log.d(TAG, "execution");
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, response.toString());
+
+        return response;
+    }
+
     public JSONArray addAmistad(String seguidor, String seguido, Context context) {
 
         String consulta = base + clave;

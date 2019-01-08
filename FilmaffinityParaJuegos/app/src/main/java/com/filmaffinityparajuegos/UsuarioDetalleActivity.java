@@ -1,10 +1,14 @@
 package com.filmaffinityparajuegos;
 
-<<<<<<< Updated upstream
+
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import android.content.Context;
@@ -16,10 +20,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.filmaffinityparajuegos.data.Amistad;
 import com.filmaffinityparajuegos.data.Usuario;
 import com.filmaffinityparajuegos.data.Videojuego;
 import com.filmaffinityparajuegos.data.VideojuegoBase;
+import com.filmaffinityparajuegos.mongobase.AmistadesDatabase;
 import com.filmaffinityparajuegos.mongobase.VideojuegosDatabase;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +40,7 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
     private Usuario usuario;
     private LinearLayout layout;
     private List<Videojuego> videojuegosQueTiene;
+    private Amistad amistad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +48,11 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_usuario_detalle);
         Intent intent = getIntent();
         usuario = intent.getParcelableExtra(NAvigationDrawerActivity.NV);
-        ((TextView)findViewById(R.id.NombreUsuario)).setText(usuario.getName());
+        ((TextView) findViewById(R.id.NombreUsuario)).setText(usuario.getName());
         layout = findViewById(R.id.LayoutJuegosQueTiene);
 
         ///añadir sus jueguicos
+
 
     }
 
@@ -53,14 +62,14 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
 
     }
 
-    private void generateBotonesTiene(){
-        for(int i = 0; i < videojuegosQueTiene.size();i++){
+    private void generateBotonesTiene() {
+        for (int i = 0; i < videojuegosQueTiene.size(); i++) {
             ImageButton buttonI;
             buttonI = new ImageButton(getApplicationContext());
             Picasso.get().load(Uri.parse(videojuegosQueTiene.get(i).getUri_imagen()))
-                    .resize(500,500).into(buttonI);
+                    .resize(500, 500).into(buttonI);
             buttonI.setId(i);
-            buttonI.setOnClickListener(new View.OnClickListener(){
+            buttonI.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(getApplicationContext(), "Ha clicado en un juego", Toast.LENGTH_SHORT).show();
@@ -75,27 +84,47 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
         }
     }
 
+    private void asignarAmistad(JSONArray respuesta){
+        JSONObject object = null;
+        try {
+            object = respuesta.getJSONObject(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String usuario1 = null;
+        String usuario2 = null;
+        Amistad aux = null;
+        try {
+            usuario1 = object.getString("seguidor");
+            usuario2 = object.getString("seguido");
+            aux = new Amistad(usuario1, usuario2);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        amistad = aux;
+    }
 
 
 
-    private class MyVolleyJuegoTiene extends AsyncTask<String,String, List<Videojuego>> {
+    private class MyVolleyJuegoTiene extends AsyncTask<String, String, List<Videojuego>> {
 
         private Context ctx;
         private JSONArray respuesta = new JSONArray();
         private List<Videojuego> videojuegos;
-        public MyVolleyJuegoTiene(Context hostContext)
-        {
+
+        public MyVolleyJuegoTiene(Context hostContext) {
             ctx = hostContext;
         }
 
         @Override
         protected List<Videojuego> doInBackground(String... params) {
             VideojuegosDatabase vdb = new VideojuegosDatabase();
-            respuesta = vdb.getVideojuegosUsuarioTiene(usuario.getName(),ctx);
+            respuesta = vdb.getVideojuegosUsuarioTiene(usuario.getName(), ctx);
             JSONObject video;
             String identificador;
-            if(respuesta.length() >0){
-                for(int i =0; i < respuesta.length();i++){
+            if (respuesta.length() > 0) {
+                for (int i = 0; i < respuesta.length(); i++) {
                     try {
                         video = respuesta.getJSONObject(i);
                         identificador = video.getString("id_videojuego");
@@ -110,22 +139,75 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
 
 
         @Override
-        protected void onPostExecute(List<Videojuego> result)
-        {
-            if(respuesta.length() >0){
+        protected void onPostExecute(List<Videojuego> result) {
 
-                Toast.makeText(ctx,
-                        "Usuario creado",Toast.LENGTH_LONG).show();
-                usuarioP = parsearUusuario(respuesta);
-                addPreferencesUserAndPassword(usuarioP.getName(), usuarioP.getPassword());
-                Intent intent = new Intent(ctx, NAvigationDrawerActivity.class);
-                startActivity(intent);
+        }
+    }
 
-            }else{
-                Toast.makeText(ctx,
-                        "Usuario ya existente",Toast.LENGTH_LONG).show();
+    private class MyVolleyFriendExist extends AsyncTask<String, String, Void> {
+
+        private Context ctx;
+        private JSONArray respuesta = new JSONArray();
+
+        public MyVolleyFriendExist(Context hostContext) {
+            ctx = hostContext;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            AmistadesDatabase adb = new AmistadesDatabase();
+            SharedPreferences sharedPref = ctx.getSharedPreferences(
+                    getString(R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
+            respuesta = adb.getAmistad(sharedPref.getString(getString(R.string.shared_nombre_user), getString(R.string.nombre_string)), usuario.getName(), ctx);
+
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void result) {
+
+            if (respuesta.length() > 0) {
+                asignarAmistad( respuesta);
             }
         }
     }
-    
+
+
+    private class MyVolleyAddFriend extends AsyncTask<String, String, Void> {
+
+        private Context ctx;
+        private JSONArray respuesta = new JSONArray();
+
+        public MyVolleyAddFriend(Context hostContext) {
+            ctx = hostContext;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            if (amistad == null) {
+                AmistadesDatabase adb = new AmistadesDatabase();
+                SharedPreferences sharedPref = ctx.getSharedPreferences(
+                        getString(R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
+                respuesta = adb.addAmistad(sharedPref.getString(getString(R.string.shared_nombre_user), getString(R.string.nombre_string)), usuario.getName(), ctx);
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (respuesta != null && respuesta.length() > 0) {
+                Toast.makeText(ctx,
+                        "Has seguido al usuario", Toast.LENGTH_LONG).show();
+                asignarAmistad( respuesta);
+
+            } else {
+                Toast.makeText(ctx,
+                        "Ha ocurrido un error", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
 }
