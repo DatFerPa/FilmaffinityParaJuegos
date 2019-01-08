@@ -2,9 +2,12 @@ package com.filmaffinityparajuegos;
 
 <<<<<<< Updated upstream
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import android.content.Context;
@@ -20,11 +23,15 @@ import com.filmaffinityparajuegos.data.Usuario;
 import com.filmaffinityparajuegos.data.Videojuego;
 import com.filmaffinityparajuegos.data.VideojuegoBase;
 import com.filmaffinityparajuegos.mongobase.VideojuegosDatabase;
+import com.igdb.api_android_java.wrapper.Parameters;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.Policy;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,6 +44,7 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        videojuegosQueTiene = new ArrayList<>();
         setContentView(R.layout.activity_usuario_detalle);
         Intent intent = getIntent();
         usuario = intent.getParcelableExtra(NAvigationDrawerActivity.NV);
@@ -44,7 +52,7 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
         layout = findViewById(R.id.LayoutJuegosQueTiene);
 
         ///añadir sus jueguicos
-
+        new MyVolleyJuegoTiene(this).execute();
     }
 
 
@@ -112,18 +120,10 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<Videojuego> result)
         {
-            if(respuesta.length() >0){
-
-                Toast.makeText(ctx,
-                        "Usuario creado",Toast.LENGTH_LONG).show();
-                usuarioP = parsearUusuario(respuesta);
-                addPreferencesUserAndPassword(usuarioP.getName(), usuarioP.getPassword());
-                Intent intent = new Intent(ctx, NAvigationDrawerActivity.class);
-                startActivity(intent);
-
-            }else{
-                Toast.makeText(ctx,
-                        "Usuario ya existente",Toast.LENGTH_LONG).show();
+            //quite lo de aqui, porque estabas haciendo que la app volviese a la siguiente cosa
+            int sizeParaRecorrer = (result.size()>10)?10:result.size();
+            for(int i=0;i < sizeParaRecorrer;i++){
+                Parameters params = new Parameters().addFields("*").addFilter();
             }
         }
     }
