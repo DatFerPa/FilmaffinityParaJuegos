@@ -85,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         String nombreUser = nombreUsuario.getText().toString();
+        usuarioP = null;
 
         //Codificacion de la password
         String passwordHashed = hashPassword();
@@ -92,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
         //Si el getUser devuelve null, significa que el usuario no existe
         new MyVolleyAsyncTask(this).execute(nombreUser,passwordHashed);
         new MyVolleyAsyncTaskSignIn(this).execute(nombreUser,passwordHashed);
+
     }
 
     private void addPreferencesUserAndPassword(String usuario, String pass){
@@ -209,7 +211,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 Toast.makeText(ctx,
                         "Usuario creado",Toast.LENGTH_LONG).show();
-
+                usuarioP = parsearUusuario(respuesta);
+                addPreferencesUserAndPassword(usuarioP.getName(), usuarioP.getPassword());
+                Intent intent = new Intent(ctx, NAvigationDrawerActivity.class);
+                startActivity(intent);
 
             }else{
                 Toast.makeText(ctx,
