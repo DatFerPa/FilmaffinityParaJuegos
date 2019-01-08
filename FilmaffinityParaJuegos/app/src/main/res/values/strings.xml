@@ -22,5 +22,7 @@
     <string name="title_activity_navigation_drawer">NAvigationDrawerActivity</string>
 
     <string name="Logout">Cerrar sesión</string>
-    <string name="menuPrincipal">Novedades</string>
+    <string name="menuPrincipal">Pantalla principal</string>
+    <string name="menuAmigos">Seguir usuarios</string>
+    <string name="menuMisJuegos">Mis juegos</string>
 </resources>

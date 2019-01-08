@@ -75,9 +75,10 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+           System.out.println("Do Nothing");
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,7 +105,18 @@ public class NAvigationDrawerActivity extends AppCompatActivity
             }
 
         } else if (id == R.id.logoutMenu) {
-            findViewById(R.id.menuPrincipalInclude).setVisibility(View.VISIBLE);
+           // findViewById(R.id.menuPrincipalInclude).setVisibility(View.VISIBLE);
+            SharedPreferences preferences = this.getSharedPreferences(getString(
+                    R.string.ID_SHARED_PREFERENCES),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
+            finish();
+        } else if(id == R.id.menuMisJuegos){
+            
+
+        }else if(id == R.id.amigosMenu){
+
         }
 
         return true;

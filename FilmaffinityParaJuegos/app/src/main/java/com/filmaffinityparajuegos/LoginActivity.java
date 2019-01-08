@@ -93,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
         //Si el getUser devuelve null, significa que el usuario no existe
         new MyVolleyAsyncTask(this).execute(nombreUser,passwordHashed);
         new MyVolleyAsyncTaskSignIn(this).execute(nombreUser,passwordHashed);
-
     }
 
     private void addPreferencesUserAndPassword(String usuario, String pass){
@@ -151,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public class MyVolleyAsyncTask extends AsyncTask<String,String, JSONArray> {
+    private class MyVolleyAsyncTask extends AsyncTask<String,String, JSONArray> {
 
         private Context ctx;
 
@@ -183,7 +182,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public class MyVolleyAsyncTaskSignIn extends AsyncTask<String,String, JSONArray> {
+    private class MyVolleyAsyncTaskSignIn extends AsyncTask<String,String, JSONArray> {
 
         private Context ctx;
         private JSONArray respuesta = new JSONArray();

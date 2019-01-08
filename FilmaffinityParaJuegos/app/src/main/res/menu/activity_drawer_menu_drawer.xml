@@ -8,6 +8,14 @@
             android:id="@+id/novedadesMenu"
             android:icon="?android:attr/actionModeWebSearchDrawable"
             android:title="@string/menuPrincipal" />
+        <item
+            android:id="@+id/menuMisJuegos"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/menuMisJuegos" />
+        <item
+            android:id="@+id/amigosMenu"
+            android:icon="@android:drawable/ic_menu_view"
+            android:title="@string/menuAmigos" />
     </group>
 
     <item
