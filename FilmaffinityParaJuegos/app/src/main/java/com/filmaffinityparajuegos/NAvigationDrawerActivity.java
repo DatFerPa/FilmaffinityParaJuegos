@@ -382,66 +382,6 @@ public class NAvigationDrawerActivity extends AppCompatActivity
     }
 
 
-    private class MyVolleyUsuarioBuscadoDetalle extends AsyncTask<String,String, Usuario> {
-
-        private Context ctx;
-        private JSONArray respuesta = new JSONArray();
-        private Usuario usuarioBuscado;
-
-
-        public MyVolleyUsuarioBuscadoDetalle(Context hostContext)
-        {
-            ctx = hostContext;
-        }
-
-        @Override
-        protected void onPostExecute(Usuario result){
-            Intent intent = new Intent(ctx, UsuarioDetalleActivity.class);
-            intent.putExtra(NV, usuarioBuscado);
-            startActivity(intent);
-        }
-
-
-        @Override
-        protected Usuario doInBackground(String... params) {
-            UsuarioDatabase usuarioBase = new UsuarioDatabase();
-
-            respuesta = usuarioBase.getUser(params[0],ctx);
-
-            if(respuesta.length() == 0){
-
-            }
-
-            else{
-                JSONObject object = null;
-                try {
-                    object = respuesta.getJSONObject(0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                String nombre = null;
-
-                Usuario aux = null;
-                try {
-                    nombre = object.getString("name");
-                    usuarioBuscado = new Usuario(nombre);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-            return null;
-        }
-
-
-
-
-    }
-
-
-
 
 /*
     Aqui se hace todo
@@ -462,10 +402,63 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         nombreUsuarioABuscar = findViewById(R.id.TextInputEditTextBuscarAmigo);
 
         //miedas de juan
-
+        new MyVolleyUsuarioBuscadoDetalle(this).execute(nombreUsuarioABuscar
+                .getText().toString());
 
 
 
     }
+
+
+
+    private class MyVolleyUsuarioBuscadoDetalle extends AsyncTask<String,String, Usuario> {
+
+        private Context ctx;
+        private JSONArray respuesta = new JSONArray();
+        private Usuario usuarioBuscado;
+
+
+        public MyVolleyUsuarioBuscadoDetalle(Context hostContext)
+        {
+            ctx = hostContext;
+        }
+
+        @Override
+        protected void onPostExecute(Usuario result){
+            Intent intent = new Intent(ctx, UsuarioDetalleActivity.class);
+            intent.putExtra(NV, usuarioBuscado);
+            startActivity(intent);
+        }
+        @Override
+        protected Usuario doInBackground(String... params) {
+            UsuarioDatabase usuarioBase = new UsuarioDatabase();
+
+            respuesta = usuarioBase.getUser(params[0],ctx);
+
+            if(respuesta.length() == 0){
+            }
+            else{
+                JSONObject object = null;
+                try {
+                    object = respuesta.getJSONObject(0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String nombre = null;
+
+                Usuario aux = null;
+                try {
+                    nombre = object.getString("name");
+                    usuarioBuscado = new Usuario(nombre);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+    }
+
 
 }
