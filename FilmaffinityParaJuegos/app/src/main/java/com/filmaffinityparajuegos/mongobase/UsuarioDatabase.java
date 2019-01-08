@@ -70,19 +70,8 @@ public class UsuarioDatabase {
         return response;
     }
 
-    private Usuario parsearAUsuario(JSONArray response) throws JSONException {
-        JSONObject object = response.getJSONObject(0);
-
-        String nombre = object.getString("name");
-        String password = object.getString("password");
-        Usuario aux = new Usuario(nombre, password);
-
-        return aux;
-    }
-
-
     public JSONArray addUser(String name, String password, Context context) {
-        final boolean[] creado = {false};
+
         String consulta = base + clave;
         RequestQueue request = Volley.newRequestQueue(context);
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -93,7 +82,7 @@ public class UsuarioDatabase {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Method.POST, consulta, new JSONObject(usuario), future, future);
         request.add(jsonObjectRequest);
         try {
-            response.put(0, future.get(3, TimeUnit.SECONDS)); // Blocks for at most 10 seconds.
+            response.put(0, future.get(3, TimeUnit.SECONDS));
         } catch (InterruptedException e) {
             Log.d(TAG, "interrupted");
         } catch (ExecutionException e) {
