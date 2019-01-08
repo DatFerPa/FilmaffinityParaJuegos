@@ -68,6 +68,8 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
 
     public void addAmigoAction(View view) {
         //añadir la amistad
+        new MyVolleyFriendExist(this).execute();
+        new MyVolleyAddFriend(this).execute();
 
     }
 
@@ -275,7 +277,7 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
 
             } else {
                 Toast.makeText(ctx,
-                        "Ha ocurrido un error", Toast.LENGTH_LONG).show();
+                        "Ya sigues a esa persona", Toast.LENGTH_LONG).show();
             }
         }
     }

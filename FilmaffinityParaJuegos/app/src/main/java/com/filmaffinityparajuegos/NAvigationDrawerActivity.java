@@ -402,8 +402,15 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         nombreUsuarioABuscar = findViewById(R.id.TextInputEditTextBuscarAmigo);
 
         //miedas de juan
-        new MyVolleyUsuarioBuscadoDetalle(this).execute(nombreUsuarioABuscar
-                .getText().toString());
+        if(nombreUsuarioABuscar.getText().toString().equals(usuarioSesion)){
+            Toast.makeText(getApplicationContext(),
+                    "Donde vas pillin", Toast.LENGTH_LONG).show();
+        }
+        else{
+            new MyVolleyUsuarioBuscadoDetalle(this).execute(nombreUsuarioABuscar
+                    .getText().toString());
+        }
+
 
 
 
@@ -425,9 +432,14 @@ public class NAvigationDrawerActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Usuario result){
+            if(usuarioBuscado != null){
             Intent intent = new Intent(ctx, UsuarioDetalleActivity.class);
             intent.putExtra(NV, usuarioBuscado);
-            startActivity(intent);
+            startActivity(intent);}
+            else{
+                Toast.makeText(ctx,
+                        "El usuario no existe", Toast.LENGTH_LONG).show();
+            }
         }
         @Override
         protected Usuario doInBackground(String... params) {
