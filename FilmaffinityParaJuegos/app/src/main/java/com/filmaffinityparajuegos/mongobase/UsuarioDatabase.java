@@ -1,8 +1,10 @@
 package com.filmaffinityparajuegos.mongobase;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
+import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -40,37 +42,32 @@ public class UsuarioDatabase {
     Usuario usuario;
 
 
-    public Usuario getUser(String name, String password, View view)  {
-        String consulta = base + "?q={\"name\":\""+ name + "\"}" + claveConsulta;
-        RequestQueue request = Volley.newRequestQueue(view.getContext());
+    private String TAG = "SO_TEST";
 
+    public JSONArray getUser(String name, String password, Context context) {
+        String consulta = base + "?q={\"name\":\"" + name + "\"}" + claveConsulta;
+        RequestQueue request = Volley.newRequestQueue(context);
+        RequestFuture<JSONArray> future = RequestFuture.newFuture();
+        JSONArray response = null;
+        System.out.println(consulta);
 
-
-        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(com.android.volley.Request.Method.GET, consulta, null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                Log.e("onResponse",""+response);
-                try {
-                    usuario = parsearAUsuario(response);
-
-
-                } catch (JSONException e) {
-                    usuario = null;
-
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("ERROR", "Error occurred ", error);
-            }
-        });
+        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Method.GET, consulta, null, future, future);
 
         request.add(jsonObjectRequest);
 
+        try {
+            response = future.get(3, TimeUnit.SECONDS); // Blocks for at most 10 seconds.
+        } catch (InterruptedException e) {
+            Log.d(TAG, "interrupted");
+        } catch (ExecutionException e) {
+            Log.d(TAG, "execution");
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
 
+        Log.d(TAG, response.toString());
 
-        return usuario;
+        return response;
     }
 
     private Usuario parsearAUsuario(JSONArray response) throws JSONException {
@@ -84,29 +81,55 @@ public class UsuarioDatabase {
     }
 
 
-    public boolean addUser(String name, String password, View view) {
+    //    public boolean addUser(String name, String password, View view) {
+//        final boolean[] creado = {false};
+//        if (getUser(name, password, view.getContext()) == null) {
+//            String consulta = base+ clave;
+//            RequestQueue request = Volley.newRequestQueue(view.getContext());
+//            Map<String, String> usuario = new HashMap<String,String>();
+//            usuario.put("name", name);
+//            usuario.put("password", password);
+//            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(com.android.volley.Request.Method.POST, consulta, new JSONObject(usuario), new Response.Listener<JSONObject>() {
+//                @Override
+//                public void onResponse(JSONObject response) {
+//                    creado[0] = true;
+//                }
+//            }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError error) {
+//                    creado[0] = false;
+//                }
+//            });
+//            request.add(jsonObjectRequest);
+//            return creado[0];
+//        } else {
+//            return creado[0];
+//        }
+//    }
+    public JSONArray addUser(String name, String password, Context context) {
         final boolean[] creado = {false};
-        if (getUser(name, password, view) == null) {
-            String consulta = base+ clave;
-            RequestQueue request = Volley.newRequestQueue(view.getContext());
-            Map<String, String> usuario = new HashMap<String,String>();
-            usuario.put("name", name);
-            usuario.put("password", password);
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(com.android.volley.Request.Method.POST, consulta, new JSONObject(usuario), new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    creado[0] = true;
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    creado[0] = false;
-                }
-            });
-            request.add(jsonObjectRequest);
-            return creado[0];
-        } else {
-            return creado[0];
+        String consulta = base + clave;
+        RequestQueue request = Volley.newRequestQueue(context);
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JSONArray response = new JSONArray();
+        Map<String, String> usuario = new HashMap<String, String>();
+        usuario.put("name", name);
+        usuario.put("password", password);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Method.POST, consulta, new JSONObject(usuario), future, future);
+        request.add(jsonObjectRequest);
+        try {
+            response.put(0, future.get(3, TimeUnit.SECONDS)); // Blocks for at most 10 seconds.
+        } catch (InterruptedException e) {
+            Log.d(TAG, "interrupted");
+        } catch (ExecutionException e) {
+            Log.d(TAG, "execution");
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+        return response;
+
     }
 }

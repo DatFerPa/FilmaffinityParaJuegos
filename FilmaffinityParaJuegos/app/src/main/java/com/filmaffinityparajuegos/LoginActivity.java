@@ -2,18 +2,13 @@ package com.filmaffinityparajuegos;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.filmaffinityparajuegos.data.Usuario;
 import com.filmaffinityparajuegos.mongobase.UsuarioDatabase;
 import com.google.common.hash.HashCode;
@@ -31,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView passWordUsuario;
     private SharedPreferences sharedPreferences;
     private  UsuarioDatabase usrDB = new UsuarioDatabase();
+    private Usuario usuarioP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,30 +43,42 @@ public class LoginActivity extends AppCompatActivity {
                 passWordUsuario.getText().toString());
         String nombreUser = nombreUsuario.getText().toString();
         String passwordHashed = hashPassword();
-        Usuario usuario = null;
+        usuarioP = null;
         try {
-            usuario = usrDB.getUser(nombreUser,passwordHashed,view);
-
-
+            new MyVolleyAsyncTask(this).execute(nombreUser,passwordHashed);
+            new AddPreferences(this).execute(nombreUser,passwordHashed);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(usuario !=null){
-            addPreferencesUserAndPassword(nombreUser,passwordHashed);
 
-
-            //pasar a la activity principal
-            System.out.println("Se ha realizado un LOGIN de manera correcta para " +
-                    " \n Usuario: "+
-                    nombreUsuario.getText().toString() + " - - Contraseña: "+
-                    passWordUsuario.getText().toString()+" - - Contraseña Hasshed: "+passwordHashed);
-
-        }else{
-            Toast.makeText(getApplicationContext(),
-                    "Usuario o contraseña incorrectas",Toast.LENGTH_LONG).show();
-        }
 
     }
+
+    private Usuario parsearUusuario(JSONArray parserUsuario) {
+        JSONObject object = null;
+        try {
+            object = parserUsuario.getJSONObject(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String nombre = null;
+        String password = null;
+        Usuario aux = null;
+        try {
+            nombre = object.getString("name");
+            password = object.getString("password");
+            aux = new Usuario(nombre, password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return aux;
+    }
+
+/
 
     public void actionSignIn(View view) {
 
@@ -81,33 +89,8 @@ public class LoginActivity extends AppCompatActivity {
         String passwordHashed = hashPassword();
         //comprabación del usuario
         //Si el getUser devuelve null, significa que el usuario no existe
-        System.out.println("llegue aqui 1");
-        if(usrDB.getUser(nombreUser,passwordHashed,view)== null) {
-            System.out.println("llegue aqui 2");
-            //shared preferences
-            addPreferencesUserAndPassword(nombreUser,passwordHashed);
-            System.out.println("llegue aqui 3");
-
-            //añadimos al usuario a la base de datos
-            usrDB.addUser(nombreUser,passwordHashed,view);
-            System.out.println("llegue aqui 4");
-
-            //pasamos a la activity principal
-            System.out.println("Se ha realizado un SIGN IN de manera correcta para " +
-                    " \n Usuario: "+
-            nombreUsuario.getText().toString() + " - - Contraseña: "+
-                    passWordUsuario.getText().toString()+" - - Contraseña Hasshed: "+passwordHashed);
-
-
-
-
-
-        }else{
-            Toast.makeText(getApplicationContext(),
-                    "El usuario ya existe, seleccione otro nombre",Toast.LENGTH_LONG).show();
-        }
-
-
+        new MyVolleyAsyncTask(this).execute(nombreUser,passwordHashed);
+        new MyVolleyAsyncTaskSignIn(this).execute(nombreUser,passwordHashed);
     }
 
     private void addPreferencesUserAndPassword(String usuario, String pass){
@@ -124,6 +107,110 @@ public class LoginActivity extends AppCompatActivity {
         HashCode hashCode = Hashing.sha512().hashString(passWordUsuario.getText().toString(),
                 Charset.defaultCharset());
          return hashCode.toString();
+    }
+
+    public class AddPreferences extends AsyncTask<String,String, Void> {
+
+        private Context ctx;
+
+        public AddPreferences(Context hostContext)
+        {
+            ctx = hostContext;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            if(usuarioP !=null){
+                addPreferencesUserAndPassword(params[0],params[1]);
+
+            }else{
+
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(usuarioP !=null){
+
+                Toast.makeText(ctx,
+                        "USUARIO CORRECTO",Toast.LENGTH_LONG).show();
+
+            }else{
+                Toast.makeText(ctx,
+                        "Usuario o contraseña incorrectas",Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
+
+    public class MyVolleyAsyncTask extends AsyncTask<String,String, JSONArray> {
+
+        private Context ctx;
+
+        public MyVolleyAsyncTask(Context hostContext)
+        {
+            ctx = hostContext;
+        }
+
+        @Override
+        protected JSONArray doInBackground(String... params) {
+
+            // Method runs on a separate thread, make all the network calls you need
+            UsuarioDatabase tester = new UsuarioDatabase();
+            JSONArray respuesta = tester.getUser(params[0],params[1],ctx);
+            if(respuesta.length() == 0)
+                usuarioP = null;
+            else
+                usuarioP = parsearUusuario(respuesta);
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(JSONArray result)
+        {
+            // runs on the UI thread
+            // do something with the result
+        }
+    }
+
+    public class MyVolleyAsyncTaskSignIn extends AsyncTask<String,String, JSONArray> {
+
+        private Context ctx;
+        private JSONArray respuesta = new JSONArray();
+        public MyVolleyAsyncTaskSignIn(Context hostContext)
+        {
+            ctx = hostContext;
+        }
+
+        @Override
+        protected JSONArray doInBackground(String... params) {
+
+            if(usuarioP ==null){
+                UsuarioDatabase base = new UsuarioDatabase();
+                respuesta = base.addUser(params[0],params[1],ctx);
+            }
+
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(JSONArray result)
+        {
+            if(respuesta.length() >0){
+
+                Toast.makeText(ctx,
+                        "Usuario creado",Toast.LENGTH_LONG).show();
+
+            }else{
+                Toast.makeText(ctx,
+                        "Usuario ya existente",Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 
