@@ -70,6 +70,32 @@ public class UsuarioDatabase {
         return response;
     }
 
+    public JSONArray getUser(String name,  Context context) {
+        String consulta = base + "?q={\"name\":\"" + name + "\"}" + claveConsulta;
+        RequestQueue request = Volley.newRequestQueue(context);
+        RequestFuture<JSONArray> future = RequestFuture.newFuture();
+        JSONArray response = null;
+        System.out.println(consulta);
+
+        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Method.GET, consulta, null, future, future);
+
+        request.add(jsonObjectRequest);
+
+        try {
+            response = future.get(3, TimeUnit.SECONDS); // Blocks for at most 10 seconds.
+        } catch (InterruptedException e) {
+            Log.d(TAG, "interrupted");
+        } catch (ExecutionException e) {
+            Log.d(TAG, "execution");
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, response.toString());
+
+        return response;
+    }
+
     public JSONArray addUser(String name, String password, Context context) {
 
         String consulta = base + clave;

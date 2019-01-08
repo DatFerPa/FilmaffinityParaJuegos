@@ -24,7 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.filmaffinityparajuegos.data.Usuario;
 import com.filmaffinityparajuegos.data.Videojuego;
+import com.filmaffinityparajuegos.data.VideojuegoBase;
+import com.filmaffinityparajuegos.mongobase.AmistadesDatabase;
+import com.filmaffinityparajuegos.mongobase.UsuarioDatabase;
+import com.filmaffinityparajuegos.mongobase.VideojuegosDatabase;
 import com.igdb.api_android_java.callback.OnSuccessCallback;
 import com.igdb.api_android_java.wrapper.IGDBWrapper;
 import com.igdb.api_android_java.wrapper.Parameters;
@@ -45,7 +50,8 @@ public class NAvigationDrawerActivity extends AppCompatActivity
 
 
     public static final String NV = "com.filmaffinityparajuegos";
-
+    public List<VideojuegoBase> videojuegosUsuario = new ArrayList<VideojuegoBase>();
+    public String usuarioSesion;
 
 
     @Override
@@ -361,6 +367,68 @@ public class NAvigationDrawerActivity extends AppCompatActivity
             return null;
         }
     }
+
+
+    private class MyVolleyUsuarioBuscadoDetalle extends AsyncTask<String,String, Usuario> {
+
+        private Context ctx;
+        private JSONArray respuesta = new JSONArray();
+        private Usuario usuarioBuscado;
+
+
+        public MyVolleyUsuarioBuscadoDetalle(Context hostContext)
+        {
+            ctx = hostContext;
+        }
+
+        @Override
+        protected void onPostExecute(Usuario result){
+            Intent intent = new Intent(ctx, UsuarioDetalleActivity.class);
+            intent.putExtra(NV, usuarioBuscado);
+            startActivity(intent);
+        }
+
+
+        @Override
+        protected Usuario doInBackground(String... params) {
+            UsuarioDatabase usuarioBase = new UsuarioDatabase();
+
+            respuesta = usuarioBase.getUser(params[0],ctx);
+
+            if(respuesta.length() == 0){
+
+            }
+
+            else{
+                JSONObject object = null;
+                try {
+                    object = respuesta.getJSONObject(0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String nombre = null;
+
+                Usuario aux = null;
+                try {
+                    nombre = object.getString("name");
+                    usuarioBuscado = new Usuario(nombre);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            return null;
+        }
+
+
+
+
+    }
+
+
+
 
 /*
 

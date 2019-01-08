@@ -1,6 +1,9 @@
 package com.filmaffinityparajuegos.data;
 
-public class Usuario {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Usuario implements Parcelable {
 
     private String name;
     private String password;
@@ -8,6 +11,10 @@ public class Usuario {
     public Usuario(String name, String password){
         this.name = name;
         this.password = password;
+    }
+
+    public Usuario(String name){
+        this.name = name;
     }
 
     public String getName() {
@@ -24,5 +31,15 @@ public class Usuario {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }
