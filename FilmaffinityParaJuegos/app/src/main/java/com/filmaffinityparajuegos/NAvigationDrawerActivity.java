@@ -62,7 +62,7 @@ public class NAvigationDrawerActivity extends AppCompatActivity
 
         SharedPreferences sharedPref = this.getSharedPreferences(
                 getString(R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
-        nombreUsuarioActivo =sharedPref.getString(getString(R.string.shared_nombre_user),getString(R.string.nombre_string));
+        usuarioSesion =sharedPref.getString(getString(R.string.shared_nombre_user),getString(R.string.nombre_string));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
