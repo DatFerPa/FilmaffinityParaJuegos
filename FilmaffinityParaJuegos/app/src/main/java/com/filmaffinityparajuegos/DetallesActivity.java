@@ -83,28 +83,22 @@ public class DetallesActivity extends AppCompatActivity {
     }
 
     public void comentar(View view) {
-        if (videojuegoAdd.getTengo_quiero() == 0 && videojuegoAdd.getComentario().equals("")) {
+        if (videojuegoAdd.getTengo_quiero() == 0) {
             Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
             intent.putExtra(NV, videojuego);
             startActivity(intent);
-        }
-        else{
-            if(videojuegoAdd.getTengo_quiero() == 0)
-                Toast.makeText(getApplicationContext(),
-                        "Ya has realizado el comentario", Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(getApplicationContext(),
-                        "Se debe tener el juego", Toast.LENGTH_LONG).show();
-        }
+        } else
+            Toast.makeText(getApplicationContext(),
+                    "Se debe tener el juego", Toast.LENGTH_LONG).show();
+        
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         cargarComentarios();
     }
 
-
-    
 
     public void loTengo(View view) {
         new MyVolleyTener(this).execute("0");
@@ -246,7 +240,7 @@ public class DetallesActivity extends AppCompatActivity {
         recyclerViewComentarios.setLayoutManager(myLayoutManager);
         recyclerViewComentarios.setItemAnimator(new DefaultItemAnimator());
 
-        recyclerViewComentarios.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
+        recyclerViewComentarios.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
         comentarioAdapter = new ComentarioAdapter(comentariosDelVideojuego);
         recyclerViewComentarios.setAdapter(comentarioAdapter);
@@ -259,7 +253,7 @@ public class DetallesActivity extends AppCompatActivity {
         private Context context;
         private JSONArray respuesta = new JSONArray();
 
-        public MyVolleyComentariosDeUnJuego(Context hostContext){
+        public MyVolleyComentariosDeUnJuego(Context hostContext) {
             context = hostContext;
         }
 
@@ -272,8 +266,8 @@ public class DetallesActivity extends AppCompatActivity {
             System.out.println("==============================");
             System.out.println(respuesta);
             JSONObject object = null;
-            if(respuesta.length()>0){
-                for(int i = 0; i < respuesta.length(); i++){
+            if (respuesta.length() > 0) {
+                for (int i = 0; i < respuesta.length(); i++) {
                     try {
                         object = respuesta.getJSONObject(i);
                         if(!("").equals(object.getString("comentario"))&&object.getString("comentario")!= null) {
@@ -281,7 +275,7 @@ public class DetallesActivity extends AppCompatActivity {
                             juegoBase.setComentario(object.getString("comentario"));
                             videojuegosBase.add(juegoBase);
                         }
-                    }catch(JSONException e){
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
@@ -291,7 +285,7 @@ public class DetallesActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<VideojuegoBase> videojuegoBases) {
-            for(int i=0; i < videojuegoBases.size();i++){
+            for (int i = 0; i < videojuegoBases.size(); i++) {
                 comentariosDelVideojuego.add(videojuegoBases.get(i));
                 comentarioAdapter.notifyDataSetChanged();
             }
