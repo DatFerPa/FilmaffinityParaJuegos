@@ -192,7 +192,7 @@ public class VideojuegosDatabase {
 
     public JSONArray actualizarVideojuegoUsuario(String id_videojuego,String id_juego, String usuario, String tener_querer,String comentario,String valoracion, Context context) {
 
-        String consulta = base + clave + "&q={\"id_videojuego\":\"" + id_videojuego + "\"}";
+        String consulta = base + clave + "&q={\"id_videojuego\":\"" + id_juego + "\",\"usuario\":\"" + usuario+ "\"}";
         RequestQueue request = Volley.newRequestQueue(context);
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JSONArray response = new JSONArray();
