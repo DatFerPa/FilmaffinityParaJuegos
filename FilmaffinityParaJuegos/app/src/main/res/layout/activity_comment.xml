@@ -17,6 +17,8 @@
         android:ems="10"
         android:hint="Comentario"
         android:inputType="textMultiLine"
+        android:maxLength="@android:integer/config_shortAnimTime"
+        android:scrollbars="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.512"
