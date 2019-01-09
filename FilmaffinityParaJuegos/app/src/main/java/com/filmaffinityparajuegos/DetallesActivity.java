@@ -283,6 +283,7 @@ public class DetallesActivity extends AppCompatActivity {
                         if(!("").equals(object.getString("comentario"))&&object.getString("comentario")!= null) {
                             VideojuegoBase juegoBase = new VideojuegoBase(object.getString("id_videojuego"));
                             juegoBase.setComentario(object.getString("comentario"));
+                            juegoBase.setNombre_usuario(object.getString("usuario") + ":");
                             videojuegosBase.add(juegoBase);
                         }
                     } catch (JSONException e) {
