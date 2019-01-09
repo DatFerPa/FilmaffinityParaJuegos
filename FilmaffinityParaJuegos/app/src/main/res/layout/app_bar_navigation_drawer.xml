@@ -34,4 +34,11 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
+    <include
+        android:id="@+id/menuMisJuegosInclude"
+        layout="@layout/mis_juegos_navigation_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
 </android.support.design.widget.CoordinatorLayout>

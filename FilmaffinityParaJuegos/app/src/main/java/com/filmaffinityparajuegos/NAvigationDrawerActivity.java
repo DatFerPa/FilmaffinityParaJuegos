@@ -82,6 +82,9 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //para forzar que se vea esta
+        findViewById(R.id.menuPrincipalInclude).setVisibility(View.VISIBLE);
+
         cargarMenuActivo();
     }
 
@@ -129,6 +132,9 @@ public class NAvigationDrawerActivity extends AppCompatActivity
             editor.commit();
             finish();
         } else if(id == R.id.menuMisJuegos){
+            if(findViewById(R.id.menuMisJuegosInclude).getVisibility()!=View.VISIBLE){
+                cargarMenuMisJuegos();
+            }
             
 
         }else if(id == R.id.amigosMenu){
@@ -142,12 +148,14 @@ public class NAvigationDrawerActivity extends AppCompatActivity
 
     private void cargarMenuActivo(){
         if(findViewById(R.id.menuPrincipalInclude).getVisibility()==View.VISIBLE) {
-
             cargarMenuPrincipalActivity();
         }
 
         if(findViewById(R.id.menuAmigosInclude).getVisibility()==View.VISIBLE){
             cargarMenuAmigos();
+        }
+        if(findViewById(R.id.menuMisJuegosInclude).getVisibility()==View.VISIBLE){
+            cargarMenuMisJuegos();
         }
     }
 
@@ -165,6 +173,8 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         findViewById(R.id.menuPrincipalInclude).setVisibility(View.VISIBLE);
         //desactivar el resto de las vistas
         findViewById(R.id.menuAmigosInclude).setVisibility(View.GONE);
+        findViewById(R.id.menuMisJuegosInclude).setVisibility(View.GONE);
+
         //
         layout = findViewById(R.id.LayoutMain);
         layouPopu = findViewById(R.id.LayoutPopular);
@@ -404,6 +414,7 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         findViewById(R.id.menuAmigosInclude).setVisibility(View.VISIBLE);
         //desactivar el resto de las vistas
         findViewById(R.id.menuPrincipalInclude).setVisibility(View.GONE);
+        findViewById(R.id.menuMisJuegosInclude).setVisibility(View.GONE);
         //
         usuariosAmigos = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerViewAmigos);
@@ -557,5 +568,217 @@ public class NAvigationDrawerActivity extends AppCompatActivity
 
     }
 
+    /*
+    Aqui se hace todo
+    lo relacionado con el menu de mis juegos
+ */
 
+    private LinearLayout layoutTengo;
+    private LinearLayout layoutQuiero;
+    private List<Videojuego> videojuegosTengo = new ArrayList<>();
+    private List<Videojuego> videojuegosQuiero = new ArrayList<>();
+
+    private void cargarMenuMisJuegos(){
+        videojuegosTengo = new ArrayList<>();
+        videojuegosQuiero = new ArrayList<>();
+        findViewById(R.id.menuMisJuegosInclude).setVisibility(View.VISIBLE);
+        //desactivar el resto de las vistas
+        findViewById(R.id.menuAmigosInclude).setVisibility(View.GONE);
+        findViewById(R.id.menuPrincipalInclude).setVisibility(View.GONE);
+
+        layoutQuiero = findViewById(R.id.LayoutJuegosQuiero);
+        layoutTengo = findViewById(R.id.LayoutJuegosTengo);
+        layoutQuiero.removeAllViews();
+        layoutTengo.removeAllViews();
+
+        new MyVolleyJuegoQuiero(this).execute();
+        new MyVolleyJuegoTengo(this).execute();
+
+
+    }
+
+    private void generateBotonQuiero(int identificador){
+        ImageButton buttonI;
+        buttonI = new ImageButton(getApplicationContext());
+        Picasso.get().load(Uri.parse(videojuegosQuiero.get(identificador).getUri_imagen()))
+                .resize(500, 500).into(buttonI);
+        buttonI.setId(identificador);
+        buttonI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Ha clicado en un juego", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
+                ImageButton btn = (ImageButton) findViewById(view.getId());
+
+                intent.putExtra(NAvigationDrawerActivity.NV, videojuegosQuiero.get(btn.getId()));
+                startActivity(intent);
+            }
+        });
+        layoutQuiero.addView(buttonI);
+    }
+
+    private void generateBotonTengo(int identificador){
+        ImageButton buttonI;
+        buttonI = new ImageButton(getApplicationContext());
+        Picasso.get().load(Uri.parse(videojuegosTengo.get(identificador).getUri_imagen()))
+                .resize(500, 500).into(buttonI);
+        buttonI.setId(identificador);
+        buttonI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Ha clicado en un juego", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
+                ImageButton btn = (ImageButton) findViewById(view.getId());
+
+                intent.putExtra(NAvigationDrawerActivity.NV, videojuegosTengo.get(btn.getId()));
+                startActivity(intent);
+            }
+        });
+        layoutTengo.addView(buttonI);
+    }
+
+private class MyVolleyJuegoTengo extends AsyncTask<Void,String,List<Videojuego>>{
+    private Context context;
+    private JSONArray respuesta;
+     public MyVolleyJuegoTengo(Context context){
+         this.context = context;
+         respuesta = new JSONArray();
+     }
+
+
+    @Override
+    protected List<Videojuego> doInBackground(Void... voids) {
+        List<Videojuego> juegosMyVolleyTengo = new ArrayList<>();;
+         VideojuegosDatabase vdb = new VideojuegosDatabase();
+         respuesta = vdb.getVideojuegosUsuarioTiene(usuarioSesion,context);
+         JSONObject videoJuego;
+         String identificador;
+         if(respuesta.length()>0){
+             for(int i=0; i<respuesta.length();i++){
+                 try{
+                     videoJuego = respuesta.getJSONObject(i);
+                     identificador=videoJuego.getString("id_videojuego");
+                     juegosMyVolleyTengo.add(new Videojuego(identificador));
+                 }catch(JSONException e){
+                     e.printStackTrace();
+                 }
+             }
+         }
+
+        return juegosMyVolleyTengo;
+    }
+
+    @Override
+    protected void onPostExecute(List<Videojuego> videojuegos) {
+        for(int i = 0; i < videojuegos.size(); i++){
+            Parameters parameters = new Parameters().addFields("*").addIds(videojuegos.get(i).getId_juego());
+            IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(),getString(R.string.API_KEY),Version.STANDARD,false);
+            wrapper.games(parameters,
+                    new OnSuccessCallback() {
+                        @Override
+                        public void onSuccess(@NotNull JSONArray jsonArray) {
+                            try{
+                                JSONObject obj = jsonArray.getJSONObject(0);
+                                System.out.println("Juego de amigo: \n"+obj);
+                                Videojuego videojuego = new Videojuego();
+                                videojuego.setId_juego(obj.getString("id"));
+                                if (obj.opt("summary") != null)
+                                    videojuego.setDescripcion(obj.getString("summary"));
+                                else
+                                    videojuego.setDescripcion("No tiene descripcion");
+                                videojuego.setTitulo(obj.getString("name"));
+                                // juego.setId_developer(obj.getString(""));
+                                videojuego.setUri_imagen("https:" + obj.getJSONObject("cover").getString("url"));
+                                System.out.println(videojuego.toString());
+                                videojuegosTengo.add(videojuego);
+                                generateBotonTengo(videojuegosTengo.size()-1);
+                            }catch (JSONException e){
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onError(@NotNull VolleyError volleyError) {
+
+                        }
+                    });
+        }
+    }
 }
+
+private class MyVolleyJuegoQuiero extends AsyncTask<Void,String,List<Videojuego>>{
+    private Context context;
+    private JSONArray respuesta;
+    public MyVolleyJuegoQuiero(Context context){
+        this.context = context;
+        respuesta = new JSONArray();
+    }
+    @Override
+    protected List<Videojuego> doInBackground(Void... voids) {
+        List<Videojuego> juegosMyVolleyQuiero = new ArrayList<>();
+        VideojuegosDatabase vdb = new VideojuegosDatabase();
+        respuesta = vdb.getVideojuegosUsuarioQuiere(usuarioSesion,context);
+        JSONObject videoJuego;
+        String identificador;
+        if(respuesta.length()>0){
+            for(int i=0; i<respuesta.length();i++){
+                try{
+                    videoJuego = respuesta.getJSONObject(i);
+                    identificador=videoJuego.getString("id_videojuego");
+                    juegosMyVolleyQuiero.add(new Videojuego(identificador));
+                }catch(JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return juegosMyVolleyQuiero;
+    }
+
+    @Override
+    protected void onPostExecute(List<Videojuego> videojuegos) {
+        for(int i = 0; i < videojuegos.size(); i++){
+            Parameters parameters = new Parameters().addFields("*").addIds(videojuegos.get(i).getId_juego());
+            IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(),getString(R.string.API_KEY),Version.STANDARD,false);
+            wrapper.games(parameters,
+                    new OnSuccessCallback() {
+                        @Override
+                        public void onSuccess(@NotNull JSONArray jsonArray) {
+                            try{
+                                JSONObject obj = jsonArray.getJSONObject(0);
+                                System.out.println("Juego de amigo: \n"+obj);
+                                Videojuego videojuego = new Videojuego();
+                                videojuego.setId_juego(obj.getString("id"));
+                                if (obj.opt("summary") != null)
+                                    videojuego.setDescripcion(obj.getString("summary"));
+                                else
+                                    videojuego.setDescripcion("No tiene descripcion");
+                                videojuego.setTitulo(obj.getString("name"));
+                                // juego.setId_developer(obj.getString(""));
+                                videojuego.setUri_imagen("https:" + obj.getJSONObject("cover").getString("url"));
+                                System.out.println(videojuego.toString());
+                                videojuegosQuiero.add(videojuego);
+                                generateBotonQuiero(videojuegosQuiero.size()-1);
+                            }catch (JSONException e){
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onError(@NotNull VolleyError volleyError) {
+
+                        }
+                    });
+
+
+
+
+        }
+    }
+}
+
+
+
+
+
+
+}//fin clase

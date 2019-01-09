@@ -27,8 +27,14 @@
     <string name="shared_password_user">PasswordUser</string>
     <string name="title_activity_navigation_drawer">NAvigationDrawerActivity</string>
 
+    <string name="JuegosQueQuiero">Juegos que quiero:</string>
+    <string name="JuegosQueTengo">Juegos que tengo:</string>
+
     <string name="Logout">Cerrar sesión</string>
     <string name="menuPrincipal">Pantalla principal</string>
     <string name="menuAmigos">Seguir usuarios</string>
     <string name="menuMisJuegos">Mis juegos</string>
+
+
+    <string name="API_KEY">cec1dc5cac50616ebc4643c7bc94647c</string>
 </resources>
