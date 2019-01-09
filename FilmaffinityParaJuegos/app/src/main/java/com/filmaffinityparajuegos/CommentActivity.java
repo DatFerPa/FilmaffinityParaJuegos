@@ -39,6 +39,7 @@ public class CommentActivity extends AppCompatActivity {
         textoComentar = (EditText) findViewById(R.id.txtComentario);
         btnComentar = (Button) findViewById(R.id.btnComentar);
         btnCancelar = (Button) findViewById(R.id.btnCancelar);
+        ratingBar = (RatingBar) findViewById(R.id.raitingComentar);
 
         SharedPreferences sharedPref = this.getSharedPreferences(
                 getString(R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
@@ -68,10 +69,11 @@ public class CommentActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... params) {
             VideojuegosDatabase videojuegosDatabase = new VideojuegosDatabase();
-            SharedPreferences sharedPref = ctx.getSharedPreferences(
-                    getString(R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
-            String usuario = sharedPref.getString(getString(R.string.shared_nombre_user), getString(R.string.nombre_string));
-            respuesta = videojuegosDatabase.comentarJuegos(videojuegoComentar.getId_videojuego(), usuario, textoComentar.getText().toString(),ctx);
+            String comentario_usuario = textoComentar.getText().toString();
+            String raiting = String.valueOf(ratingBar.getRating());
+            String tengo_quiero = String.valueOf(videojuegoComentar.getTengo_quiero());
+            respuesta = videojuegosDatabase.actualizarVideojuegoUsuario(videojuego.getId_juego(),usuario, tengo_quiero,comentario_usuario,raiting,ctx);
+
 
             return null;
         }
@@ -80,7 +82,8 @@ public class CommentActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             if (respuesta.length() > 0) {
                 Toast.makeText(ctx,
-                        "Se ha añadido el comentario", Toast.LENGTH_LONG).show();
+                        "Se ha añadido el comentario y valoración", Toast.LENGTH_LONG).show();
+                finish();
             } else {
                 Toast.makeText(ctx,
                         "No se ha podido realizar comentario", Toast.LENGTH_LONG).show();
@@ -132,8 +135,12 @@ public class CommentActivity extends AppCompatActivity {
     private void existeJuego(JSONObject res) {
         try {
             JSONObject id_base = res.getJSONObject("_id");
+            String usuario = res.getString("usuario");
+            String comentario = res.getString("comentario");
+            String valoracion = res.getString("valoracion");
+            int tener_querer = res.getInt("tener_querer");
             String id = id_base.getString("$oid");
-            videojuegoComentar = new VideojuegoBase(id);
+            videojuegoComentar = new VideojuegoBase(id,comentario,tener_querer,Double.parseDouble(valoracion),usuario);
         } catch (JSONException e) {
             e.printStackTrace();
         }
