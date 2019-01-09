@@ -56,8 +56,8 @@ public class VideojuegosDatabase {
         return response;
     }
 
-    public JSONArray getLoTiene(String id_juego,String usuario, Context context) {
-        String consulta = base + "?q={\"id_videojuego\":\"" + id_juego+ "\",\"usuario\":\"" + usuario + "\"}" + claveConsulta;
+    public JSONArray getLoTiene(String id_juego, String usuario, Context context) {
+        String consulta = base + "?q={\"id_videojuego\":\"" + id_juego + "\",\"usuario\":\"" + usuario + "\"}" + claveConsulta;
         RequestQueue request = Volley.newRequestQueue(context);
         RequestFuture<JSONArray> future = RequestFuture.newFuture();
         JSONArray response = null;
@@ -76,7 +76,6 @@ public class VideojuegosDatabase {
         } catch (TimeoutException e) {
             e.printStackTrace();
         }
-
 
 
         return response;
@@ -160,7 +159,7 @@ public class VideojuegosDatabase {
         return response;
     }
 
-    public JSONArray addVideojuego(String id_videojuego,String usuario, String comentario,Double valoracion, String tener_querer, Context context) {
+    public JSONArray addVideojuego(String id_videojuego, String usuario, String comentario, Double valoracion, String tener_querer, Context context) {
 
         String consulta = base + clave;
         RequestQueue request = Volley.newRequestQueue(context);
@@ -171,7 +170,7 @@ public class VideojuegosDatabase {
         videojuego.put("usuario", usuario);
         videojuego.put("comentario", comentario);
         videojuego.put("valoracion", valoracion.toString());
-        videojuego.put("tener_querer",tener_querer);
+        videojuego.put("tener_querer", tener_querer);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, consulta, new JSONObject(videojuego), future, future);
         request.add(jsonObjectRequest);
         try {
@@ -191,19 +190,18 @@ public class VideojuegosDatabase {
     }
 
 
+    public JSONArray actualizarVideojuegoUsuario(String id_videojuego, String usuario, String tener_querer,String comentario,String valoracion, Context context) {
 
-    public JSONArray actualizarVideojuegoUsuario(String id_videojuego,String usuario,  String tener_querer, Context context) {
-
-        String consulta = base + clave + "&q={\"id_videojuego\":\"" + id_videojuego +"\"}";
+        String consulta = base + clave + "&q={\"id_videojuego\":\"" + id_videojuego + "\"}";
         RequestQueue request = Volley.newRequestQueue(context);
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JSONArray response = new JSONArray();
         Map<String, String> videojuego = new HashMap<String, String>();
         videojuego.put("id_videojuego", id_videojuego);
         videojuego.put("usuario", usuario);
-        videojuego.put("tener_querer",tener_querer);
-        videojuego.put("comentar","");
-        videojuego.put("valoracion", "");
+        videojuego.put("tener_querer", tener_querer);
+        videojuego.put("comentario", comentario);
+        videojuego.put("valoracion", valoracion);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, consulta, new JSONObject(videojuego), future, future);
         request.add(jsonObjectRequest);
         try {
@@ -222,32 +220,5 @@ public class VideojuegosDatabase {
 
     }
 
-    public JSONArray comentarJuegos(String id_videojuego,String usuario,  String comentario, Context context) {
 
-        String consulta = base + clave + "&q={\"id_videojuego\":\"" + id_videojuego +"\"}";
-        RequestQueue request = Volley.newRequestQueue(context);
-        RequestFuture<JSONObject> future = RequestFuture.newFuture();
-        JSONArray response = new JSONArray();
-        Map<String, String> videojuego = new HashMap<String, String>();
-        videojuego.put("id_videojuego", id_videojuego);
-        videojuego.put("usuario", usuario);
-        videojuego.put("comentario",comentario);
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, consulta, new JSONObject(videojuego), future, future);
-        request.add(jsonObjectRequest);
-        try {
-            response.put(0, future.get(3, TimeUnit.SECONDS));
-        } catch (InterruptedException e) {
-            Log.d(TAG, "interrupted");
-        } catch (ExecutionException e) {
-            Log.d(TAG, "execution");
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return response;
-
-    }
 }

@@ -113,7 +113,7 @@ public class DetallesActivity extends AppCompatActivity {
                 respuesta = videojuegosDatabase.addVideojuego(videojuego.getId_juego(), usuario, "", 0.0, params[0], ctx);
             } else {
 
-                respuesta = videojuegosDatabase.actualizarVideojuegoUsuario(videojuego.getId_juego(), usuario, params[0], ctx);
+                respuesta = videojuegosDatabase.actualizarVideojuegoUsuario(videojuego.getId_juego(), usuario, params[0],videojuegoAdd.getComentario(),String.valueOf(videojuegoAdd.getValoracion()), ctx);
 
             }
             return null;
@@ -187,8 +187,12 @@ public class DetallesActivity extends AppCompatActivity {
     private void existeJuego(JSONObject res) {
         try {
             JSONObject id_base = res.getJSONObject("_id");
+            String usuario = res.getString("usuario");
+            String comentario = res.getString("comentario");
+            String valoracion = res.getString("valoracion");
+            int tener_querer = res.getInt("tener_querer");
             String id = id_base.getString("$oid");
-            videojuegoAdd = new VideojuegoBase(id);
+            videojuegoAdd = new VideojuegoBase(id,comentario,tener_querer,Double.parseDouble(valoracion),usuario);
         } catch (JSONException e) {
             e.printStackTrace();
         }
