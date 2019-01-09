@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.filmaffinityparajuegos.data.Usuario;
 import com.filmaffinityparajuegos.data.Videojuego;
+import com.filmaffinityparajuegos.data.VideojuegoBase;
 import com.filmaffinityparajuegos.mongobase.UsuarioDatabase;
 import com.filmaffinityparajuegos.mongobase.VideojuegosDatabase;
 import com.squareup.picasso.Picasso;
@@ -29,7 +30,7 @@ public class DetallesActivity extends AppCompatActivity {
     ImageView imagenVideojuego;
     TextView tituloVideojuego;
     TextView descripcionVideojuego;
-    Videojuego videojuegoAdd;
+    VideojuegoBase videojuegoAdd;
     Button botonTengo, botonQuiero;
 
     @Override
@@ -45,45 +46,31 @@ public class DetallesActivity extends AppCompatActivity {
         descripcionVideojuego.setText(videojuego.getDescripcion());
         botonTengo = (Button) findViewById(R.id.btnLoTengo);
         botonQuiero = (Button) findViewById(R.id.btnLoQuiero);
-        Picasso.get().load(Uri.parse(videojuego.getUri_imagen())).resize(500  ,500).into(imagenVideojuego);
+        Picasso.get().load(Uri.parse(videojuego.getUri_imagen())).resize(500, 500).into(imagenVideojuego);
         new MyVolleyTengo(this).execute();
     }
 
-    public void loTengo(View view){
+    public void loTengo(View view) {
         new MyVolleyTener(this).execute("0");
     }
 
-    public void loQuiero(View view){
+    public void loQuiero(View view) {
         new MyVolleyTener(this).execute("1");
     }
 
 
-    public void addItems(){
+    public void addItems() {
 
     }
 
-    private class MyVolleyTener extends AsyncTask<String,String, Void> {
+    private class MyVolleyTener extends AsyncTask<String, String, Void> {
 
         private Context ctx;
         private JSONArray respuesta = new JSONArray();
 
 
-
-        public MyVolleyTener(Context hostContext)
-        {
+        public MyVolleyTener(Context hostContext) {
             ctx = hostContext;
-        }
-
-        @Override
-        protected void onPostExecute(Void result){
-            if(respuesta.length()>0){
-                Toast.makeText(ctx,
-                        "Se ha actualizado la base", Toast.LENGTH_LONG).show();
-            }
-            else{
-                Toast.makeText(ctx,
-                        "Ha ocurrido un error", Toast.LENGTH_LONG).show();
-            }
         }
 
         @Override
@@ -92,61 +79,88 @@ public class DetallesActivity extends AppCompatActivity {
             SharedPreferences sharedPref = ctx.getSharedPreferences(
                     getString(R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
             String usuario = sharedPref.getString(getString(R.string.shared_nombre_user), getString(R.string.nombre_string));
-            respuesta = videojuegosDatabase.addVideojuego(videojuego.getId_juego(),usuario,"",0.0,params[0],ctx);
 
+            if (videojuegoAdd == null) {
+                respuesta = videojuegosDatabase.addVideojuego(videojuego.getId_juego(), usuario, "", 0.0, params[0], ctx);
+            } else {
+
+                respuesta = videojuegosDatabase.actualizarVideojuegoUsuario(videojuego.getId_juego(), usuario, params[0], ctx);
+
+            }
             return null;
         }
 
+        @Override
+        protected void onPostExecute(Void result) {
+            if (respuesta.length() > 0 && respuesta != null) {
+                Toast.makeText(ctx,
+                        "Se ha actualizado la base", Toast.LENGTH_LONG).show();
+                new MyVolleyTengo(ctx).execute();
+            } else {
+                Toast.makeText(ctx,
+                        "Ha ocurrido un error", Toast.LENGTH_LONG).show();
+
+
+            }
+        }
+
+
     }
 
-    private class MyVolleyTengo extends AsyncTask<String,String, Void> {
+    private class MyVolleyTengo extends AsyncTask<String, String, Void> {
 
         private Context ctx;
         private JSONArray respuesta = new JSONArray();
 
 
-
-        public MyVolleyTengo(Context hostContext)
-        {
+        public MyVolleyTengo(Context hostContext) {
             ctx = hostContext;
         }
 
         @Override
-        protected void onPostExecute(Void result){
-            if(respuesta.length()>0){
+        protected Void doInBackground(String... params) {
+            VideojuegosDatabase videojuegosDatabase = new VideojuegosDatabase();
+            SharedPreferences sharedPref = ctx.getSharedPreferences(
+                    getString(R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
+            String usuario = sharedPref.getString(getString(R.string.shared_nombre_user), getString(R.string.nombre_string));
+            respuesta = videojuegosDatabase.getLoTiene(videojuego.getId_juego(), usuario, ctx);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (respuesta.length() > 0) {
                 try {
                     JSONObject res = respuesta.getJSONObject(0);
-                    if(res.get("tener_querer").toString().equals("0")){
+                    if (res.get("tener_querer").toString().equals("0")) {
                         botonTengo.setText("No tengo");
-                    }
-                    else {
+                        botonQuiero.setText("Lo quiero");
+                    } else {
                         botonQuiero.setText("No quiero");
+                        botonTengo.setText("Lo tengo");
                     }
-
+                    existeJuego(res);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-            else{
-                Toast.makeText(ctx,
-                        "Ha ocurrido un error", Toast.LENGTH_LONG).show();
+            } else {
+
             }
         }
 
-        @Override
-        protected Void doInBackground(String... params) {
-            VideojuegosDatabase videojuegosDatabase = new VideojuegosDatabase();
-            SharedPreferences sharedPref = ctx.getSharedPreferences(
-                    getString(R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
-            String usuario = sharedPref.getString(getString(R.string.shared_nombre_user), getString(R.string.nombre_string));
-            respuesta = videojuegosDatabase.getLoTiene(videojuego.getId_juego(),usuario,ctx);
-
-            return null;
-        }
 
     }
 
-
+    private void existeJuego(JSONObject res) {
+        try {
+            JSONObject id_base = res.getJSONObject("_id");
+            String id = id_base.getString("$oid");
+            videojuegoAdd = new VideojuegoBase(id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }
