@@ -42,7 +42,7 @@
         app:srcCompat="@android:drawable/ic_menu_search" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerViewAmigos"
         android:layout_width="359dp"
         android:layout_height="337dp"
         android:layout_marginStart="8dp"

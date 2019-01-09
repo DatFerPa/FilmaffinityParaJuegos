@@ -9,6 +9,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.filmaffinityparajuegos.adapter.AmigoAdapter;
+import com.filmaffinityparajuegos.adapter.RecyclerTouchListener;
 import com.filmaffinityparajuegos.data.Usuario;
 import com.filmaffinityparajuegos.data.Videojuego;
 import com.filmaffinityparajuegos.data.VideojuegoBase;
@@ -388,15 +394,37 @@ public class NAvigationDrawerActivity extends AppCompatActivity
     lo relacionado con el menu de amigos
  */
     private TextView nombreUsuarioABuscar;
+    private RecyclerView recyclerView;
+    private List<Usuario> usuariosAmigos;
+    private AmigoAdapter amigoAdapter;
 
     private void cargarMenuAmigos(){
         findViewById(R.id.menuAmigosInclude).setVisibility(View.VISIBLE);
         //desactivar el resto de las vistas
         findViewById(R.id.menuPrincipalInclude).setVisibility(View.GONE);
         //
+        usuariosAmigos = new ArrayList<>();
+        recyclerView = findViewById(R.id.recyclerViewAmigos);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
+
+        amigoAdapter = new AmigoAdapter(usuariosAmigos);
+        recyclerView.setAdapter(amigoAdapter);
+
+        /*
+        añadir a la lista usuariosAmigos
+        amigoAdapter.notifyDataSetChanged();
+         */
+        new MyVolleyBuscarAmigos(this).execute(usuarioSesion);
 
 
     }
+
+
 
     public void buscarAmigo(View view) {
         nombreUsuarioABuscar = findViewById(R.id.TextInputEditTextBuscarAmigo);
@@ -411,9 +439,64 @@ public class NAvigationDrawerActivity extends AppCompatActivity
                     .getText().toString());
         }
 
+    }
+
+    private class MyVolleyBuscarAmigos extends AsyncTask<String,Void,List<Usuario>>{
+
+        private Context context;
+        private JSONArray respuesta = new JSONArray();
+        private List<Usuario> usuarios;
+        public MyVolleyBuscarAmigos(Context hostContext)
+        {
+            context = hostContext;
+            usuarios = new ArrayList<>();
+        }
+
+        @Override
+        protected List<Usuario> doInBackground(String... strings) {
+            AmistadesDatabase amistad = new AmistadesDatabase();
+            respuesta = amistad.getAmistades(strings[0],context);
+            JSONObject object = null;
+            System.out.println(respuesta.toString());
+            if(respuesta.length()!=0){
+                for(int i = 0; i < respuesta.length(); i++) {
+                    try {
+                        object = respuesta.getJSONObject(i);
+                        String nombreUser = object.getString("seguido");
+                        usuarios.add(new Usuario(nombreUser));
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return usuarios;
+        }
 
 
+        @Override
+        protected void onPostExecute(List<Usuario> usr) {
+            for(int i=0; i<usr.size();i++){
+                usuariosAmigos.add(usr.get(i));
+                amigoAdapter.notifyDataSetChanged();
+            }
+            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView,
+                    new RecyclerTouchListener.ClickListener() {
+                        @Override
+                        public void onClick(View view, int position) {
+                            Usuario usuario = usuariosAmigos.get(position);
 
+                            Intent intent = new Intent(getApplicationContext()
+                                    ,UsuarioDetalleActivity.class);
+                            intent.putExtra(NV, usuario);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onLongCLick(View view, int position) {
+
+                        }
+                    }));
+        }
     }
 
 

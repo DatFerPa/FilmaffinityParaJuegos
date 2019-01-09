@@ -60,4 +60,6 @@ public class Usuario implements Parcelable {
         parcel.writeString(name);
         parcel.writeString(password);
     }
+
+
 }
