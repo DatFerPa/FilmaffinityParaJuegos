@@ -190,6 +190,8 @@ public class VideojuegosDatabase {
 
     }
 
+
+
     public JSONArray actualizarVideojuegoUsuario(String id_videojuego,String usuario,  String tener_querer, Context context) {
 
         String consulta = base + clave + "&q={\"id_videojuego\":\"" + id_videojuego +"\"}";
@@ -200,6 +202,37 @@ public class VideojuegosDatabase {
         videojuego.put("id_videojuego", id_videojuego);
         videojuego.put("usuario", usuario);
         videojuego.put("tener_querer",tener_querer);
+        videojuego.put("comentar","");
+        videojuego.put("valoracion", "");
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, consulta, new JSONObject(videojuego), future, future);
+        request.add(jsonObjectRequest);
+        try {
+            response.put(0, future.get(3, TimeUnit.SECONDS));
+        } catch (InterruptedException e) {
+            Log.d(TAG, "interrupted");
+        } catch (ExecutionException e) {
+            Log.d(TAG, "execution");
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return response;
+
+    }
+
+    public JSONArray comentarJuegos(String id_videojuego,String usuario,  String comentario, Context context) {
+
+        String consulta = base + clave + "&q={\"id_videojuego\":\"" + id_videojuego +"\"}";
+        RequestQueue request = Volley.newRequestQueue(context);
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JSONArray response = new JSONArray();
+        Map<String, String> videojuego = new HashMap<String, String>();
+        videojuego.put("id_videojuego", id_videojuego);
+        videojuego.put("usuario", usuario);
+        videojuego.put("comentario",comentario);
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, consulta, new JSONObject(videojuego), future, future);
         request.add(jsonObjectRequest);
         try {

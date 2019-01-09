@@ -1,15 +1,27 @@
 package com.filmaffinityparajuegos;
 
+import android.animation.FloatArrayEvaluator;
+import android.app.ActionBar;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +44,11 @@ public class DetallesActivity extends AppCompatActivity {
     TextView descripcionVideojuego;
     VideojuegoBase videojuegoAdd;
     Button botonTengo, botonQuiero;
+    FloatingActionButton btnComentar;
+
+    public static final String NV = "com.filmaffinityparajuegos";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +63,20 @@ public class DetallesActivity extends AppCompatActivity {
         descripcionVideojuego.setText(videojuego.getDescripcion());
         botonTengo = (Button) findViewById(R.id.btnLoTengo);
         botonQuiero = (Button) findViewById(R.id.btnLoQuiero);
+        btnComentar = (FloatingActionButton) findViewById(R.id.btnComentar);
+
+
         Picasso.get().load(Uri.parse(videojuego.getUri_imagen())).resize(500, 500).into(imagenVideojuego);
+
         new MyVolleyTengo(this).execute();
+    }
+
+    public void comentar(View view){
+        Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
+        intent.putExtra(NV,videojuego);
+        startActivity(intent);
+
+
     }
 
     public void loTengo(View view) {
@@ -134,11 +163,14 @@ public class DetallesActivity extends AppCompatActivity {
                 try {
                     JSONObject res = respuesta.getJSONObject(0);
                     if (res.get("tener_querer").toString().equals("0")) {
-                        botonTengo.setText("No tengo");
-                        botonQuiero.setText("Lo quiero");
+
+                        botonTengo.setEnabled(false);
+                        botonQuiero.setEnabled(true);
+
                     } else {
-                        botonQuiero.setText("No quiero");
-                        botonTengo.setText("Lo tengo");
+
+                        botonQuiero.setEnabled(false);
+                        botonTengo.setEnabled(true);
                     }
                     existeJuego(res);
                 } catch (JSONException e) {
@@ -161,6 +193,9 @@ public class DetallesActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
+
 
 
 }

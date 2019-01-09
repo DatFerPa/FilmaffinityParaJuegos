@@ -32,7 +32,8 @@
              </intent-filter>
             -->
         </activity>
-        <activity android:name=".UsuarioDetalleActivity"></activity>
+        <activity android:name=".UsuarioDetalleActivity" />
+        <activity android:name=".CommentActivity"></activity>
     </application>
 
 </manifest>
