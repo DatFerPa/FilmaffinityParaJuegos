@@ -42,11 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnComentar"
-        app:layout_constraintHorizontal_bias="0.625"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView3"
         app:layout_constraintVertical_bias="0.063" />
@@ -84,19 +81,6 @@
                 android:text="Comentario del juego 2" />
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/btnComentar"
-        android:layout_width="104dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="Comentar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView3"
-        app:layout_constraintVertical_bias="0.063" />
 
     <Button
         android:id="@+id/btnLoQuiero"
@@ -155,5 +139,24 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnComentar"
+        android:layout_width="61dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:onClick="comentar"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.947"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.875"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
 
 </android.support.constraint.ConstraintLayout>
