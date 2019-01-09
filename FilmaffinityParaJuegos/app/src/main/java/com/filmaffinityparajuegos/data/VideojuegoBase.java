@@ -17,6 +17,10 @@ public class VideojuegoBase {
         this.nombre_usuario = nombre_usuario;
     }
 
+    public VideojuegoBase(String id_videojuego){
+        this.id_videojuego = id_videojuego;
+    }
+
     public String getId_videojuego() {
         return id_videojuego;
     }

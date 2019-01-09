@@ -65,7 +65,7 @@ public class UsuarioDatabase {
             e.printStackTrace();
         }
 
-        Log.d(TAG, response.toString());
+
 
         return response;
     }
