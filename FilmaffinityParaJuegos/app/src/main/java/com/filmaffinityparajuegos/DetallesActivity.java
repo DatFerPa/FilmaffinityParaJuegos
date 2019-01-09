@@ -59,6 +59,7 @@ public class DetallesActivity extends AppCompatActivity {
     public static final String NV = "com.filmaffinityparajuegos";
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,19 +84,24 @@ public class DetallesActivity extends AppCompatActivity {
     }
 
     public void comentar(View view) {
-        if (videojuegoAdd.getTengo_quiero() == 0) {
-            Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
-            intent.putExtra(NV, videojuego);
-            startActivity(intent);
+        if (videojuegoAdd != null) {
+            if (videojuegoAdd.getTengo_quiero() == 0) {
+                Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
+                intent.putExtra(NV, videojuego);
+                startActivity(intent);
+            } else
+                Toast.makeText(getApplicationContext(),
+                        "Se debe tener el juego", Toast.LENGTH_LONG).show();
         } else
             Toast.makeText(getApplicationContext(),
                     "Se debe tener el juego", Toast.LENGTH_LONG).show();
-        
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        new MyVolleyTengo(getApplicationContext()).execute();
+
         cargarComentarios();
     }
 
@@ -134,7 +140,7 @@ public class DetallesActivity extends AppCompatActivity {
                 respuesta = videojuegosDatabase.addVideojuego(videojuego.getId_juego(), usuario, "", 0.0, params[0], ctx);
             } else {
 
-                respuesta = videojuegosDatabase.actualizarVideojuegoUsuario(videojuego.getId_juego(), usuario, params[0], videojuegoAdd.getComentario(), String.valueOf(videojuegoAdd.getValoracion()), ctx);
+                respuesta = videojuegosDatabase.actualizarVideojuegoUsuario(videojuegoAdd.getId_videojuego(),videojuego.getId_juego(), usuario, params[0], videojuegoAdd.getComentario(), String.valueOf(videojuegoAdd.getValoracion()), ctx);
 
             }
             return null;
@@ -252,6 +258,7 @@ public class DetallesActivity extends AppCompatActivity {
     private class MyVolleyComentariosDeUnJuego extends AsyncTask<Void, Void, List<VideojuegoBase>> {
         private Context context;
         private JSONArray respuesta = new JSONArray();
+        List<VideojuegoBase> videojuegosBase = new ArrayList<>();
 
         public MyVolleyComentariosDeUnJuego(Context hostContext) {
             context = hostContext;
@@ -259,12 +266,15 @@ public class DetallesActivity extends AppCompatActivity {
 
         @Override
         protected List<VideojuegoBase> doInBackground(Void... voids) {
-            List<VideojuegoBase> videojuegosBase = new ArrayList<>();
+
             VideojuegosDatabase vgdb = new VideojuegosDatabase();
-            respuesta = vgdb.getVideojuego(videojuego.getId_juego(),context);
-            System.out.println("==============================");
-            System.out.println("==============================");
-            System.out.println(respuesta);
+            respuesta = vgdb.getVideojuego(videojuego.getId_juego(), context);
+
+            return videojuegosBase;
+        }
+
+        @Override
+        protected void onPostExecute(List<VideojuegoBase> videojuegoBases) {
             JSONObject object = null;
             if (respuesta.length() > 0) {
                 for (int i = 0; i < respuesta.length(); i++) {
@@ -280,11 +290,6 @@ public class DetallesActivity extends AppCompatActivity {
                     }
                 }
             }
-            return videojuegosBase;
-        }
-
-        @Override
-        protected void onPostExecute(List<VideojuegoBase> videojuegoBases) {
             for (int i = 0; i < videojuegoBases.size(); i++) {
                 comentariosDelVideojuego.add(videojuegoBases.get(i));
                 comentarioAdapter.notifyDataSetChanged();

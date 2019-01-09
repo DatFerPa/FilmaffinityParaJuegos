@@ -51,7 +51,7 @@ public class VideojuegosDatabase {
             e.printStackTrace();
         }
 
-        Log.d(TAG, response.toString());
+
 
         return response;
     }
@@ -190,14 +190,14 @@ public class VideojuegosDatabase {
     }
 
 
-    public JSONArray actualizarVideojuegoUsuario(String id_videojuego, String usuario, String tener_querer,String comentario,String valoracion, Context context) {
+    public JSONArray actualizarVideojuegoUsuario(String id_videojuego,String id_juego, String usuario, String tener_querer,String comentario,String valoracion, Context context) {
 
         String consulta = base + clave + "&q={\"id_videojuego\":\"" + id_videojuego + "\"}";
         RequestQueue request = Volley.newRequestQueue(context);
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JSONArray response = new JSONArray();
         Map<String, String> videojuego = new HashMap<String, String>();
-        videojuego.put("id_videojuego", id_videojuego);
+        videojuego.put("id_videojuego", id_juego);
         videojuego.put("usuario", usuario);
         videojuego.put("tener_querer", tener_querer);
         videojuego.put("comentario", comentario);

@@ -72,7 +72,7 @@ public class CommentActivity extends AppCompatActivity {
             String comentario_usuario = textoComentar.getText().toString();
             String raiting = String.valueOf(ratingBar.getRating());
             String tengo_quiero = String.valueOf(videojuegoComentar.getTengo_quiero());
-            respuesta = videojuegosDatabase.actualizarVideojuegoUsuario(videojuego.getId_juego(),usuario, tengo_quiero,comentario_usuario,raiting,ctx);
+            respuesta = videojuegosDatabase.actualizarVideojuegoUsuario(videojuegoComentar.getId_videojuego(),videojuego.getId_juego(),usuario, tengo_quiero,comentario_usuario,raiting,ctx);
 
 
             return null;
