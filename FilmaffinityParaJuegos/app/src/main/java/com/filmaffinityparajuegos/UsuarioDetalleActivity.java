@@ -182,7 +182,7 @@ public class UsuarioDetalleActivity extends AppCompatActivity {
                 //comprobar esta mierda
 
                 Parameters params = new Parameters().addFields("*").addIds(videojuegos.get(i).getId_juego());
-                IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(),"cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
+                IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(),    getString(R.string.API_KEY), Version.STANDARD, false);
                 wrapper.games(params, new
                         OnSuccessCallback() {
                             @Override

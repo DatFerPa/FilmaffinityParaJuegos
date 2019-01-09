@@ -234,7 +234,7 @@ public class NAvigationDrawerActivity extends AppCompatActivity
     }
     public void buscarJuego(View view) {
         TextView texto = (TextView) findViewById(R.id.TextoJuegoParaBuscar);
-        IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(), "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
+        IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(),     getString(R.string.API_KEY), Version.STANDARD, false);
         Parameters params = new Parameters().addSearch(texto.getText().toString()).addFields("*").addFilter("[category][eq]=0").addLimit("1");
         wrapper.games(params, new OnSuccessCallback() {
             @Override
@@ -294,7 +294,7 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... voids) {
             videojuegosPopulares = new ArrayList<>();
-            IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(), "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
+            IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(),     getString(R.string.API_KEY), Version.STANDARD, false);
             Parameters params2 = new Parameters().addFields("*").addFilter("[category][eq]=0").addOrder("popularity:desc").addLimit("6");
             wrapper.games(params2, new OnSuccessCallback() {
                 @Override
@@ -360,7 +360,7 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         protected Void doInBackground(Void... voids) {
             videojuegosNuevos = new ArrayList<>();
             Parameters params = new Parameters().addFields("*").addFilter("[category][eq]=0").addOrder("published_at:desc").addLimit("6");
-            IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(), "cec1dc5cac50616ebc4643c7bc94647c", Version.STANDARD, false);
+            IGDBWrapper wrapper = new IGDBWrapper(getApplicationContext(),     getString(R.string.API_KEY), Version.STANDARD, false);
             wrapper.games(params, new
 
                     OnSuccessCallback() {
