@@ -268,14 +268,14 @@ public class DetallesActivity extends AppCompatActivity {
             List<VideojuegoBase> videojuegosBase = new ArrayList<>();
             VideojuegosDatabase vgdb = new VideojuegosDatabase();
             respuesta = vgdb.getVideojuego(videojuego.getId_juego(),context);
+            System.out.println("==============================");
+            System.out.println("==============================");
+            System.out.println(respuesta);
             JSONObject object = null;
             if(respuesta.length()>0){
                 for(int i = 0; i < respuesta.length(); i++){
                     try {
                         object = respuesta.getJSONObject(i);
-                        System.out.println("==============================");
-                        System.out.println("==============================");
-                        System.out.println(object);
                         if(!("").equals(object.getString("comentario"))&&object.getString("comentario")!= null) {
                             VideojuegoBase juegoBase = new VideojuegoBase(object.getString("id_videojuego"));
                             juegoBase.setComentario(object.getString("comentario"));
