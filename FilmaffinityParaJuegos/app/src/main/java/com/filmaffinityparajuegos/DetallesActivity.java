@@ -49,7 +49,6 @@ public class DetallesActivity extends AppCompatActivity {
     public static final String NV = "com.filmaffinityparajuegos";
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,10 +70,16 @@ public class DetallesActivity extends AppCompatActivity {
         new MyVolleyTengo(this).execute();
     }
 
-    public void comentar(View view){
-        Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
-        intent.putExtra(NV,videojuego);
-        startActivity(intent);
+    public void comentar(View view) {
+        if (videojuegoAdd.getTengo_quiero() == 0) {
+            Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
+            intent.putExtra(NV, videojuego);
+            startActivity(intent);
+        }
+        else{
+            Toast.makeText(getApplicationContext(),
+                    "Se debe tener el juego", Toast.LENGTH_LONG).show();
+        }
 
 
     }
@@ -113,7 +118,7 @@ public class DetallesActivity extends AppCompatActivity {
                 respuesta = videojuegosDatabase.addVideojuego(videojuego.getId_juego(), usuario, "", 0.0, params[0], ctx);
             } else {
 
-                respuesta = videojuegosDatabase.actualizarVideojuegoUsuario(videojuego.getId_juego(), usuario, params[0],videojuegoAdd.getComentario(),String.valueOf(videojuegoAdd.getValoracion()), ctx);
+                respuesta = videojuegosDatabase.actualizarVideojuegoUsuario(videojuego.getId_juego(), usuario, params[0], videojuegoAdd.getComentario(), String.valueOf(videojuegoAdd.getValoracion()), ctx);
 
             }
             return null;
@@ -192,14 +197,12 @@ public class DetallesActivity extends AppCompatActivity {
             String valoracion = res.getString("valoracion");
             int tener_querer = res.getInt("tener_querer");
             String id = id_base.getString("$oid");
-            videojuegoAdd = new VideojuegoBase(id,comentario,tener_querer,Double.parseDouble(valoracion),usuario);
+            videojuegoAdd = new VideojuegoBase(id, comentario, tener_querer, Double.parseDouble(valoracion), usuario);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
-
-
 
 
 }

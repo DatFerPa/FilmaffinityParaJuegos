@@ -82,7 +82,7 @@ public class CommentActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             if (respuesta.length() > 0) {
                 Toast.makeText(ctx,
-                        "Se ha añadido el comentario", Toast.LENGTH_LONG).show();
+                        "Se ha añadido el comentario y valoración", Toast.LENGTH_LONG).show();
                 finish();
             } else {
                 Toast.makeText(ctx,
