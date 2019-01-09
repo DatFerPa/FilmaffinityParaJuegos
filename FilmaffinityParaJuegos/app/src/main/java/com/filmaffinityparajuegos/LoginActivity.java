@@ -33,6 +33,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                getString(R.string.ID_SHARED_PREFERENCES), Context.MODE_PRIVATE);
+        if(sharedPref.contains(getString(R.string.shared_nombre_user))
+                &&sharedPref.contains(getString(R.string.shared_password_user))){
+            Intent intent = new Intent(getApplicationContext(), NAvigationDrawerActivity.class);
+            startActivity(intent);
+        }
+
         setContentView(R.layout.activity_login);
         nombreUsuario = findViewById(R.id.EditTextNombreUser);
         passWordUsuario = findViewById(R.id.EditTextPassword);

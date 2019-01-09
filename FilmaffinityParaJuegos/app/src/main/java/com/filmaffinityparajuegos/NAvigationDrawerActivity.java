@@ -174,7 +174,6 @@ public class NAvigationDrawerActivity extends AppCompatActivity
         //desactivar el resto de las vistas
         findViewById(R.id.menuAmigosInclude).setVisibility(View.GONE);
         findViewById(R.id.menuMisJuegosInclude).setVisibility(View.GONE);
-
         //
         layout = findViewById(R.id.LayoutMain);
         layouPopu = findViewById(R.id.LayoutPopular);
