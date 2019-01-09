@@ -17,6 +17,7 @@
     <string name="SignInButton">Sign In</string>
 
     <string name="NombreUsuarioABuscar">Usuario que quiere buscar</string>
+    <string name="GenteSiguiendo">Siguiendo : </string>
     <string name="AddAmigo">Seguir</string>
     <string name="RemoveAmigo">Dejar de Seguir</string>
     <string name="JuegosDelAmigo">Juegos que tiene:</string>
