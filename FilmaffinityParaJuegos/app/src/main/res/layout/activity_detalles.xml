@@ -40,47 +40,13 @@
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView3"
-        app:layout_constraintVertical_bias="0.063" />
-
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="341dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.703"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textComent1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Comentario del juego 1" />
-
-            <TextView
-                android:id="@+id/textComentario2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Comentario del juego 2" />
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintVertical_bias="0.01" />
 
     <Button
         android:id="@+id/btnLoQuiero"
@@ -90,33 +56,32 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Lo quiero"
         android:onClick="loQuiero"
+        android:text="Lo quiero"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnLoTengo"
-        app:layout_constraintHorizontal_bias="0.633"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.817" />
+        app:layout_constraintVertical_bias="0.716" />
 
     <Button
         android:id="@+id/btnLoTengo"
         android:layout_width="148dp"
         android:layout_height="56dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="56dp"
+        android:layout_marginEnd="76dp"
         android:layout_marginBottom="12dp"
-        android:text="Lo Tengo"
         android:onClick="loTengo"
+        android:text="Lo Tengo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.822" />
+        app:layout_constraintVertical_bias="0.721" />
 
     <ScrollView
         android:id="@+id/scrollView3"
-        android:layout_width="337dp"
-        android:layout_height="116dp"
+        android:layout_width="344dp"
+        android:layout_height="81dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -156,7 +121,20 @@
         app:layout_constraintHorizontal_bias="0.947"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.875"
+        app:layout_constraintVertical_bias="0.569"
         app:srcCompat="@android:drawable/ic_menu_edit" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RecyclerViewComentario"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLoQuiero" />
 
 </android.support.constraint.ConstraintLayout>

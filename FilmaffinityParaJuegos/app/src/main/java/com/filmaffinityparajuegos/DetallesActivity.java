@@ -13,6 +13,10 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,6 +29,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.filmaffinityparajuegos.adapter.ComentarioAdapter;
 import com.filmaffinityparajuegos.data.Usuario;
 import com.filmaffinityparajuegos.data.Videojuego;
 import com.filmaffinityparajuegos.data.VideojuegoBase;
@@ -35,6 +40,9 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetallesActivity extends AppCompatActivity {
 
@@ -47,7 +55,6 @@ public class DetallesActivity extends AppCompatActivity {
     FloatingActionButton btnComentar;
 
     public static final String NV = "com.filmaffinityparajuegos";
-
 
 
     @Override
@@ -69,11 +76,18 @@ public class DetallesActivity extends AppCompatActivity {
         Picasso.get().load(Uri.parse(videojuego.getUri_imagen())).resize(500, 500).into(imagenVideojuego);
 
         new MyVolleyTengo(this).execute();
+
     }
 
-    public void comentar(View view){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cargarComentarios();
+    }
+
+    public void comentar(View view) {
         Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
-        intent.putExtra(NV,videojuego);
+        intent.putExtra(NV, videojuego);
         startActivity(intent);
 
 
@@ -196,6 +210,74 @@ public class DetallesActivity extends AppCompatActivity {
 
 
 
+    /*
+    TODO
+    Cosas de los comenetarios
+     */
+
+    private RecyclerView recyclerViewComentarios;
+    private List<VideojuegoBase> comentariosDelVideojuego;
+    private ComentarioAdapter comentarioAdapter;
+
+    private void cargarComentarios() {
+        comentariosDelVideojuego = new ArrayList<>();
+        recyclerViewComentarios = findViewById(R.id.RecyclerViewComentario);
+
+        RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerViewComentarios.setLayoutManager(myLayoutManager);
+        recyclerViewComentarios.setItemAnimator(new DefaultItemAnimator());
+
+        recyclerViewComentarios.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
+
+        comentarioAdapter = new ComentarioAdapter(comentariosDelVideojuego);
+        recyclerViewComentarios.setAdapter(comentarioAdapter);
+
+        new MyVolleyComentariosDeUnJuego(this).execute();
+
+    }
+
+    private class MyVolleyComentariosDeUnJuego extends AsyncTask<Void, Void, List<VideojuegoBase>> {
+        private Context context;
+        private JSONArray respuesta = new JSONArray();
+
+        public MyVolleyComentariosDeUnJuego(Context hostContext){
+            context = hostContext;
+        }
+
+        @Override
+        protected List<VideojuegoBase> doInBackground(Void... voids) {
+            List<VideojuegoBase> videojuegosBase = new ArrayList<>();
+            VideojuegosDatabase vgdb = new VideojuegosDatabase();
+            respuesta = vgdb.getVideojuego(videojuego.getId_juego(),context);
+            JSONObject object = null;
+            if(respuesta.length()>0){
+                for(int i = 0; i < respuesta.length(); i++){
+                    try {
+                        object = respuesta.getJSONObject(i);
+                        System.out.println("==============================");
+                        System.out.println("==============================");
+                        System.out.println(object);
+                        if(!("").equals(object.getString("comentario"))&&object.getString("comentario")!= null) {
+                            VideojuegoBase juegoBase = new VideojuegoBase(object.getString("id_videojuego"));
+                            juegoBase.setComentario(object.getString("comentario"));
+                            videojuegosBase.add(juegoBase);
+                        }
+                    }catch(JSONException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return videojuegosBase;
+        }
+
+        @Override
+        protected void onPostExecute(List<VideojuegoBase> videojuegoBases) {
+            for(int i=0; i < videojuegoBases.size();i++){
+                comentariosDelVideojuego.add(videojuegoBases.get(i));
+                comentarioAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
 
 }

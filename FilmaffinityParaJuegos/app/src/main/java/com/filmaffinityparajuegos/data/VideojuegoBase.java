@@ -8,7 +8,6 @@ public class VideojuegoBase {
     double valoracion;
     String nombre_usuario;
 
-
     public VideojuegoBase(String id_videojuego, String comentario, int tengo_quiero, double valoracion, String nombre_usuario) {
         this.id_videojuego = id_videojuego;
         this.comentario = comentario;
