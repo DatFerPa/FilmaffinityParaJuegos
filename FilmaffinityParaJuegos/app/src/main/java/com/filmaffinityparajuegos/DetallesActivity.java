@@ -65,7 +65,7 @@ public class DetallesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalles);
         Intent intent = getIntent();
-        videojuego = intent.getParcelableExtra(MenuPrincipalActivity.NV);
+        videojuego = intent.getParcelableExtra(NAvigationDrawerActivity.NV);
         imagenVideojuego = (ImageView) findViewById(R.id.imagenJuego);
         tituloVideojuego = (TextView) findViewById(R.id.id_titulo);
         descripcionVideojuego = (TextView) findViewById(R.id.id_resumen);

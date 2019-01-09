@@ -35,7 +35,7 @@ public class CommentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         Intent intent = getIntent();
-        videojuego = intent.getParcelableExtra(MenuPrincipalActivity.NV);
+        videojuego = intent.getParcelableExtra(DetallesActivity.NV);
         textoComentar = (EditText) findViewById(R.id.txtComentario);
         btnComentar = (Button) findViewById(R.id.btnComentar);
         btnCancelar = (Button) findViewById(R.id.btnCancelar);
