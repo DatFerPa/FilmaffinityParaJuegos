@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class DetallesActivity extends AppCompatActivity {
     VideojuegoBase videojuegoAdd;
     Button botonTengo, botonQuiero;
     FloatingActionButton btnComentar;
+    RatingBar raitingBarJuego;
 
     public static final String NV = "com.filmaffinityparajuegos";
 
@@ -71,7 +73,8 @@ public class DetallesActivity extends AppCompatActivity {
         botonTengo = (Button) findViewById(R.id.btnLoTengo);
         botonQuiero = (Button) findViewById(R.id.btnLoQuiero);
         btnComentar = (FloatingActionButton) findViewById(R.id.btnComentar);
-
+        raitingBarJuego = (RatingBar) findViewById(R.id.ratingBar);
+        raitingBarJuego.setEnabled(false);
 
         Picasso.get().load(Uri.parse(videojuego.getUri_imagen())).resize(500, 500).into(imagenVideojuego);
 
@@ -80,14 +83,18 @@ public class DetallesActivity extends AppCompatActivity {
     }
 
     public void comentar(View view) {
-        if (videojuegoAdd.getTengo_quiero() == 0) {
+        if (videojuegoAdd.getTengo_quiero() == 0 && videojuegoAdd.getComentario().equals("")) {
             Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
             intent.putExtra(NV, videojuego);
             startActivity(intent);
         }
         else{
-            Toast.makeText(getApplicationContext(),
-                    "Se debe tener el juego", Toast.LENGTH_LONG).show();
+            if(videojuegoAdd.getTengo_quiero() == 0)
+                Toast.makeText(getApplicationContext(),
+                        "Ya has realizado el comentario", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getApplicationContext(),
+                        "Se debe tener el juego", Toast.LENGTH_LONG).show();
         }
     }
     @Override
@@ -213,6 +220,7 @@ public class DetallesActivity extends AppCompatActivity {
             int tener_querer = res.getInt("tener_querer");
             String id = id_base.getString("$oid");
             videojuegoAdd = new VideojuegoBase(id, comentario, tener_querer, Double.parseDouble(valoracion), usuario);
+            raitingBarJuego.setRating(Float.parseFloat(valoracion));
 
         } catch (JSONException e) {
             e.printStackTrace();
